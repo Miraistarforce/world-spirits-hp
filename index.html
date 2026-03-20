@@ -597,14 +597,14 @@
       const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
 
       const minSize = 60;
-      const maxSize = Math.min(300, window.innerWidth * 0.7);
-      const growP = Math.min(1, progress / 0.15);
+      const maxSize = Math.min(300, window.innerWidth * 0.55);
+      const growP = Math.min(1, progress / 0.10);
       const size = minSize + (maxSize - minSize) * growP;
 
-      // Fade slowly: 0.15 to 0.3, then stay at ~0.06
+      // Fade: starts at 0.09, text gets thinner even after size stops growing
       let visionOpacity = 1;
       if (progress > 0.09) {
-        visionOpacity = Math.max(0.06, 1 - ((progress - 0.09) / 0.2));
+        visionOpacity = Math.max(0.04, 1 - ((progress - 0.09) / 0.18));
       }
 
       visionSection.style.setProperty('--vision-size', size + 'px');
