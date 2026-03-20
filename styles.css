@@ -1820,7 +1820,7 @@ ul, ol {
 }
 
 .c-transition__eagle {
-  width: 120px;
+  width: 200px;
   height: auto;
   opacity: 0;
 }
@@ -2568,6 +2568,11 @@ ul, ol {
 
   .p-service-show {
     display: none;
+  }
+
+  /* Hide pagetop on mobile */
+  .c-pagetop {
+    display: none !important;
   }
 
   /* Footer */
