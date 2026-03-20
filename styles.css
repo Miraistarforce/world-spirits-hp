@@ -93,6 +93,9 @@ ul, ol {
   border-bottom: 1px solid transparent;
   opacity: 0;
   transform: translateY(-100%);
+}
+
+body.is-loaded .g-header {
   animation: headerSlideDown 0.8s 0.2s forwards cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -350,6 +353,9 @@ ul, ol {
 .p-home-first__char {
   display: inline-block;
   transform: translateY(110%);
+}
+
+body.is-loaded .p-home-first__char {
   animation: heroCharReveal 0.6s forwards cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -373,12 +379,15 @@ ul, ol {
 .p-home-first__copy-l {
   opacity: 0;
   transform: translateY(30px);
-  animation: heroFadeUp 0.9s 2.2s forwards var(--ease);
   font-size: 32px;
   font-weight: 700;
   color: var(--color-white);
   letter-spacing: 0.08em;
   line-height: 1.6;
+}
+
+body.is-loaded .p-home-first__copy-l {
+  animation: heroFadeUp 0.9s 2.2s forwards var(--ease);
 }
 
 .p-home-first__copy-s {
@@ -389,6 +398,9 @@ ul, ol {
   line-height: 1.8;
   opacity: 0;
   transform: translateY(30px);
+}
+
+body.is-loaded .p-home-first__copy-s {
   animation: heroFadeUp 0.9s 2.5s forwards var(--ease);
 }
 
@@ -399,7 +411,10 @@ ul, ol {
   right: 100px;
   z-index: 3;
   opacity: 0;
-  animation: heroFadeUp 1s 1s forwards var(--ease);
+}
+
+body.is-loaded .p-home-first__scroll {
+  animation: heroFadeUp 1s 2.8s forwards var(--ease);
 }
 
 .p-home-first__scroll-circle {

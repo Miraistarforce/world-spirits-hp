@@ -42,7 +42,7 @@
   <!-- ===== Header ===== -->
   <header class="g-header" id="header">
     <div class="g-header__inner">
-      <a class="g-header__logo" href="#">
+      <a class="g-header__logo" href="index.html">
         <span class="g-header__logo-en">WORLD SPIRITS</span>
         <span class="g-header__logo-ja">ワールドスピリッツ株式会社</span>
       </a>
@@ -560,9 +560,10 @@
         blue.classList.add('is-active');
         loading.classList.add('is-blue');
       }, blueDelay);
-      // Hide loading after blue covers
+      // Hide loading and start page animations
       setTimeout(function() {
         loading.classList.add('is-done');
+        document.body.classList.add('is-loaded');
       }, blueDelay + 800);
     })();
 
