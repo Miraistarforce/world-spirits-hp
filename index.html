@@ -921,6 +921,7 @@
             e.preventDefault();
             closeMenu();
             overlay.classList.add('is-active');
+            sessionStorage.setItem('eagle-transition', '1');
             setTimeout(function() {
               window.location.href = href;
             }, 900);

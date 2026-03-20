@@ -43,6 +43,19 @@
       to { opacity: 1; }
     }
 
+    .c-blue-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #004a99;
+      transition: opacity 0.8s ease;
+      pointer-events: none;
+    }
+
+    .c-blue-overlay.is-fading {
+      opacity: 0;
+    }
+
     a { color: inherit; text-decoration: none; }
 
     /* ===== Header ===== */
@@ -553,6 +566,18 @@
   </style>
 </head>
 <body>
+  <script>
+    if (sessionStorage.getItem('eagle-transition')) {
+      sessionStorage.removeItem('eagle-transition');
+      var ov = document.createElement('div');
+      ov.className = 'c-blue-overlay';
+      document.body.appendChild(ov);
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() { ov.classList.add('is-fading'); });
+      });
+      setTimeout(function() { ov.remove(); }, 1000);
+    }
+  </script>
 
   <!-- Header -->
   <header class="g-header" id="header">
