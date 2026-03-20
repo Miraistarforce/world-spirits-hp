@@ -1798,6 +1798,57 @@ ul, ol {
 }
 
 /* ========================================
+   Page Transition
+   ======================================== */
+.c-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.c-transition.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.c-transition__eagle {
+  width: 120px;
+  height: auto;
+  opacity: 0;
+}
+
+.c-transition.is-active .c-transition__eagle {
+  animation: eagleFly 1.2s forwards cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes eagleFly {
+  0% {
+    opacity: 0;
+    transform: translate(60vw, 60vh) scale(0.3) rotate(10deg);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-60vw, -60vh) scale(0.3) rotate(-10deg);
+  }
+}
+
+/* ========================================
    Scroll Animations
    ======================================== */
 .js-reveal {

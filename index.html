@@ -512,6 +512,11 @@
     <svg viewBox="0 0 24 24"><polyline points="6,15 12,9 18,15"/></svg>
   </button>
 
+  <!-- Page Transition Overlay -->
+  <div class="c-transition" id="pageTransition">
+    <img class="c-transition__eagle" src="images/eagle-black.png" alt="">
+  </div>
+
   <!-- ===== Script ===== -->
   <script>
     // Hero title: split into per-character spans with clip mask
@@ -825,6 +830,22 @@
 
       positionSlides();
       autoTimer = setInterval(next, 4000);
+    })();
+
+    // Page transition with eagle
+    (function() {
+      var overlay = document.getElementById('pageTransition');
+      var links = document.querySelectorAll('a[href$=".html"]');
+      links.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          var href = link.getAttribute('href');
+          e.preventDefault();
+          overlay.classList.add('is-active');
+          setTimeout(function() {
+            window.location.href = href;
+          }, 900);
+        });
+      });
     })();
   </script>
 
