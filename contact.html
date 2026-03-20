@@ -959,6 +959,7 @@
     }
 
     var formData = {};
+    var originalFormHTML = document.querySelector('.p-contact__main').innerHTML;
 
     function setStep(n) {
       document.querySelectorAll('.p-contact__step').forEach(function(s, i) {
@@ -1020,13 +1021,44 @@
           '<button type="button" class="c-form__submit" style="width:100%;justify-content:center;" onclick="handleSend()">' +
             '送信する' +
           '</button>' +
-          '<button type="button" class="c-confirm__back" onclick="location.reload()">戻って修正する</button>' +
+          '<button type="button" class="c-confirm__back" onclick="backToForm()">戻って修正する</button>' +
         '</div>' +
         '<footer class="c-footer">&copy; World Spirits Co., Ltd.</footer>';
 
       setStep(1);
       window.scrollTo(0, 0);
       return false;
+    }
+
+    function backToForm() {
+      var main = document.querySelector('.p-contact__main');
+      main.innerHTML = originalFormHTML;
+      setStep(0);
+      // Re-bind form
+      form = document.getElementById('contactForm');
+      countEl = document.getElementById('remainCount');
+      requiredFields = form.querySelectorAll('[required]');
+      form.addEventListener('input', updateCount);
+      form.addEventListener('change', updateCount);
+      // Restore values
+      Object.keys(formData).forEach(function(key) {
+        var val = formData[key];
+        if (Array.isArray(val)) {
+          // Checkboxes
+          val.forEach(function(v) {
+            var cb = form.querySelector('input[name="' + key + '"][value="' + v + '"]');
+            if (cb) cb.checked = true;
+          });
+        } else {
+          var el = form.querySelector('[name="' + key + '"]');
+          if (el) el.value = val;
+        }
+      });
+      // Restore privacy checkbox
+      var privacyCb = form.querySelector('[name="privacy"]');
+      if (privacyCb) privacyCb.checked = true;
+      updateCount();
+      window.scrollTo(0, 0);
     }
 
     function handleSend() {
