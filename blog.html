@@ -35,6 +35,12 @@
       background: var(--color-white);
       line-height: 1.8;
       -webkit-font-smoothing: antialiased;
+      opacity: 0;
+      animation: pageFadeIn 0.8s 0.2s forwards ease;
+    }
+
+    @keyframes pageFadeIn {
+      to { opacity: 1; }
     }
 
     a { color: inherit; text-decoration: none; }
