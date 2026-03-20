@@ -1883,7 +1883,7 @@ ul, ol {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: #fff;
+  background: var(--color-blue);
   display: flex;
   align-items: center;
   justify-content: center;
