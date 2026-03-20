@@ -2104,7 +2104,9 @@ ul, ol {
   }
 
   .p-home-first__scroll {
-    right: 24px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
     bottom: 100px;
   }
 
