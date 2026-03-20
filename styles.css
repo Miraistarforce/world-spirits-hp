@@ -769,6 +769,7 @@ ul, ol {
   height: 1000vh;
   position: relative;
   margin-top: -60px;
+  overflow: hidden;
 }
 
 .p-home-vision__sticky {
@@ -779,6 +780,7 @@ ul, ol {
   align-items: center;
   justify-content: center;
   padding-top: 30vh;
+  overflow: hidden;
 }
 
 .p-home-vision__text {
