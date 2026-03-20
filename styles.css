@@ -2395,9 +2395,15 @@ ul, ol {
   }
 
   /* Cube: left on top, right on bottom on mobile */
+  .p-service-show__sticky {
+    padding-top: 0;
+    align-items: flex-start;
+    padding-top: 10px;
+  }
+
   .p-service-show__layout {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 12px;
     padding: 0 20px;
     justify-items: center;
     text-align: center;
@@ -2412,7 +2418,7 @@ ul, ol {
 
   .p-service-show__left {
     order: 1;
-    margin-bottom: 8px;
+    margin-bottom: 0;
   }
 
   .p-service-show__center {
