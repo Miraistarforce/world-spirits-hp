@@ -2389,7 +2389,7 @@ ul, ol {
     display: block;
     text-align: center;
     padding: 60px 20px 24px;
-    background: var(--color-offwhite);
+    background: var(--color-white);
   }
 
   .p-home-message__sp-vision-en {
@@ -2422,13 +2422,14 @@ ul, ol {
   .p-home-message__sp-cards {
     display: block;
     padding: 0 0 60px;
-    overflow: hidden;
+    background: var(--color-offwhite);
+    position: relative;
   }
 
   .p-home-message__sp-slider {
     display: flex;
     gap: 16px;
-    padding: 0 20px;
+    padding: 32px 20px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
@@ -2442,10 +2443,10 @@ ul, ol {
   .p-home-message__sp-card {
     flex-shrink: 0;
     width: 85vw;
-    background: var(--color-offwhite);
+    background: var(--color-white);
     border-radius: 8px;
     overflow: hidden;
-    scroll-snap-align: start;
+    scroll-snap-align: center;
   }
 
   .p-home-message__sp-card-head {
