@@ -19,6 +19,7 @@
 
   <!-- ===== Loading Screen ===== -->
   <div class="c-loading" id="loadingScreen">
+    <div class="c-loading__blue" id="loadingBlue"></div>
     <div class="c-loading__content">
       <svg class="c-loading__svg" width="441" height="30" viewBox="0 0 441 30" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path class="c-loading__letter" d="M2.75391 2.26562H0V0.742188H19.7461V2.26562H16.2305L21.6406 18.2812L24.5703 8.4375L22.3242 2.26562H21.0352V0.742188H39.3164V2.26562H35.8008L41.1719 18.1836L45.4492 3.47656C45.4883 3.35938 45.5078 3.25521 45.5078 3.16406C45.5078 2.99479 45.4167 2.85807 45.2344 2.75391C45.0651 2.63672 44.8177 2.54557 44.4922 2.48047C44.1797 2.40234 43.8021 2.35026 43.3594 2.32422C42.9297 2.28516 42.4544 2.26562 41.9336 2.26562V0.742188H51.2305V2.26562C50.0716 2.26562 49.2122 2.35677 48.6523 2.53906C48.1055 2.70833 47.7604 3.02083 47.6172 3.47656L40.2344 28.418H31.8359L25.6836 11.4648L20.6641 28.418H12.2852L2.75391 2.26562Z" fill="black"/>
@@ -540,23 +541,28 @@
 
   <!-- ===== Script ===== -->
   <script>
-    // Loading screen: letter-by-letter SVG + logo
+    // Loading screen: letter-by-letter SVG + logo + blue sweep
     (function() {
       var letters = document.querySelectorAll('.c-loading__letter');
       var logo = document.querySelector('.c-loading__logo');
       var loading = document.getElementById('loadingScreen');
-      // Stagger letters
+      var blue = document.getElementById('loadingBlue');
+      // Stagger letters fast
       letters.forEach(function(letter, i) {
-        letter.style.animationDelay = (0.15 + i * 0.12) + 's';
+        letter.style.animationDelay = (0.1 + i * 0.06) + 's';
       });
       // Logo appears after all letters
-      var logoDelay = 0.15 + letters.length * 0.12 + 0.2;
+      var logoDelay = 0.1 + letters.length * 0.06 + 0.15;
       logo.style.animationDelay = logoDelay + 's';
-      // Hide loading after logo is shown
-      var hideDelay = (logoDelay + 1.0) * 1000;
+      // Blue sweep starts after logo is visible
+      var blueDelay = (logoDelay + 0.7) * 1000;
       setTimeout(function() {
-        loading.classList.add('is-hidden');
-      }, hideDelay);
+        blue.classList.add('is-active');
+      }, blueDelay);
+      // Hide loading after blue covers
+      setTimeout(function() {
+        loading.classList.add('is-done');
+      }, blueDelay + 800);
     })();
 
     // Hero title: split into per-character spans with clip mask

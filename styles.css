@@ -1808,30 +1808,48 @@ ul, ol {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.6s ease, visibility 0.6s;
 }
 
-.c-loading.is-hidden {
-  opacity: 0;
-  visibility: hidden;
+.c-loading.is-done {
   pointer-events: none;
+  visibility: hidden;
+}
+
+/* Blue gradient overlay that sweeps from top */
+.c-loading__blue {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--color-blue) 0%, var(--color-blue) 100%);
+  transform: translateY(-100%);
+  z-index: 2;
+}
+
+.c-loading__blue.is-active {
+  animation: loadingBlueSweep 0.7s forwards cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes loadingBlueSweep {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
 }
 
 .c-loading__content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
+  gap: 36px;
+  position: relative;
+  z-index: 1;
 }
 
 .c-loading__svg {
-  width: min(380px, 80vw);
+  width: min(560px, 88vw);
   height: auto;
 }
 
 .c-loading__letter {
   opacity: 0;
-  animation: loadingLetterIn 0.4s forwards ease-out;
+  animation: loadingLetterIn 0.25s forwards ease-out;
 }
 
 @keyframes loadingLetterIn {
@@ -1840,17 +1858,17 @@ ul, ol {
 }
 
 .c-loading__logo {
-  width: min(160px, 40vw);
+  width: min(280px, 55vw);
   height: auto;
   opacity: 0;
-  transform: translateY(10px);
-  animation: loadingLogoIn 0.6s forwards ease-out;
+  transform: translateY(10px) scale(0.95);
+  animation: loadingLogoIn 0.5s forwards ease-out;
 }
 
 @keyframes loadingLogoIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(10px) scale(0.95);
   }
   to {
     opacity: 1;
