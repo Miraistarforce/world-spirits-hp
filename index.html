@@ -42,7 +42,7 @@
   <!-- ===== Header ===== -->
   <header class="g-header" id="header">
     <div class="g-header__inner">
-      <a class="g-header__logo" href="index.html">
+      <a class="g-header__logo" href="index.html" data-no-eagle>
         <span class="g-header__logo-en">WORLD SPIRITS</span>
         <span class="g-header__logo-ja">ワールドスピリッツ株式会社</span>
       </a>
@@ -916,6 +916,8 @@
 
           // External page (.html)
           if (href.indexOf('.html') !== -1) {
+            // Skip eagle for logo link
+            if (link.hasAttribute('data-no-eagle')) return;
             e.preventDefault();
             closeMenu();
             overlay.classList.add('is-active');
