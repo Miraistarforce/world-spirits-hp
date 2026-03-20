@@ -582,25 +582,58 @@
       }
 
       .p-contact__side {
-        position: static;
+        position: sticky;
+        top: 0;
         height: auto;
-        padding: 32px 24px;
+        padding: 16px 20px;
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        justify-content: space-between;
+        gap: 12px;
+        z-index: 50;
       }
 
       .p-contact__steps {
         flex-direction: row;
-        gap: 20px;
+        gap: 16px;
+      }
+
+      .p-contact__step {
+        gap: 8px;
+        font-size: 12px;
+      }
+
+      .p-contact__step-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
       }
 
       .p-contact__count {
         margin-top: 0;
+        margin-left: auto;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .p-contact__count p {
+        margin: 0;
+      }
+
+      .p-contact__count-num {
+        display: inline;
+        margin-top: 0;
+        font-size: 13px;
+      }
+
+      .p-contact__count-num span {
+        font-size: 20px;
       }
 
       .p-contact__main {
-        padding: 40px 20px 60px;
+        padding: 32px 20px 60px;
       }
 
       .c-form__two {
