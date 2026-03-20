@@ -2075,13 +2075,18 @@ ul, ol {
     padding: 60px 0;
   }
 
+  /* Mobile nav - fix text color on white bg */
+  .g-header__center .g-header-nav__link {
+    color: var(--color-blue);
+  }
+
   /* Hero */
   .p-home-first__inner {
     padding: 0 16px;
   }
 
   .p-home-first__title {
-    font-size: clamp(32px, 10vw, 56px);
+    font-size: clamp(40px, 12vw, 64px);
   }
 
   .p-home-first__title-line1 {
@@ -2106,8 +2111,8 @@ ul, ol {
   }
 
   .p-home-first__scroll {
-    right: 20px;
-    bottom: 24px;
+    right: 24px;
+    bottom: 100px;
   }
 
   .p-home-first__scroll-circle {
@@ -2126,12 +2131,33 @@ ul, ol {
   }
 
   /* Second section */
-  .p-home-second__display {
-    font-size: clamp(32px, 10vw, 60px);
+  .p-home-second__main {
+    flex-wrap: wrap;
+  }
+
+  .p-home-second__line {
+    display: none;
+  }
+
+  .p-home-second__the-only {
+    font-size: clamp(36px, 10vw, 60px);
+  }
+
+  .p-home-second__elegance {
+    font-size: clamp(36px, 10vw, 60px);
+    width: 100%;
+  }
+
+  .p-home-second__create {
+    font-size: clamp(18px, 5vw, 32px);
+  }
+
+  .p-home-second__content {
+    padding: 0 20px;
   }
 
   .p-home-second__info-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .p-home-second__info-text {
