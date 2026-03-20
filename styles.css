@@ -1815,17 +1815,22 @@ ul, ol {
   visibility: hidden;
 }
 
-/* Blue gradient overlay that sweeps from top */
+/* Blue gradient overlay that sweeps from top - behind content */
 .c-loading__blue {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, var(--color-blue) 0%, var(--color-blue) 100%);
+  background: var(--color-blue);
   transform: translateY(-100%);
-  z-index: 2;
+  z-index: 0;
 }
 
 .c-loading__blue.is-active {
   animation: loadingBlueSweep 0.7s forwards cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.c-loading.is-blue .c-loading__letter {
+  fill: #fff;
+  transition: fill 0.4s;
 }
 
 @keyframes loadingBlueSweep {
