@@ -828,6 +828,24 @@
         });
       });
 
+      // Touch swipe support
+      var carousel = document.getElementById('worksCarousel');
+      var touchStartX = 0;
+      var touchEndX = 0;
+      carousel.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      carousel.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        var diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) goTo(current + 1);
+          else goTo(current - 1);
+          clearInterval(autoTimer);
+          autoTimer = setInterval(next, 4000);
+        }
+      }, { passive: true });
+
       positionSlides();
       autoTimer = setInterval(next, 4000);
     })();
