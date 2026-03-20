@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog｜ブログ｜ワールドスピリッツ株式会社</title>
+  <meta name="description" content="ワールドスピリッツ株式会社のブログ。商品情報やイベントレポート、スタッフのおすすめなど最新情報をお届けします。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fustat:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-blue: #004a99;
+      --color-blue-dark: #003d7a;
+      --color-main: #1a1a2e;
+      --color-accent: #c4a265;
+      --color-white: #ffffff;
+      --color-offwhite: #f8f6f3;
+      --color-text: #333333;
+      --color-text-light: #888888;
+      --color-border: #e5e0d8;
+      --font-en: "Fustat", "Helvetica Neue", sans-serif;
+      --font-ja: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+      --container-l: 1280px;
+      --header-h: 80px;
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body {
+      font-family: var(--font-ja);
+      font-weight: 400;
+      color: var(--color-text);
+      background: var(--color-white);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ===== Header ===== */
+    .g-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-h);
+      z-index: 100;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      transition: background 0.4s;
+    }
+
+    .g-header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .g-header__logo {
+      text-decoration: none;
+    }
+
+    .g-header__logo-en {
+      font-family: var(--font-en);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-blue);
+      letter-spacing: 0.08em;
+    }
+
+    .g-header__logo-ja {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--color-blue);
+      opacity: 0.6;
+      letter-spacing: 0.06em;
+    }
+
+    .g-header-nav__list {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .g-header-nav__link {
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-blue);
+      letter-spacing: 0.06em;
+      transition: opacity 0.3s;
+    }
+
+    .g-header-nav__link:hover { opacity: 0.6; }
+
+    .c-button--header {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--color-blue);
+      color: var(--color-white);
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 12px 24px;
+      border: 1px solid var(--color-blue);
+      text-decoration: none;
+      transition: background 0.3s, opacity 0.3s;
+    }
+
+    .c-button--header:hover { opacity: 0.85; }
+
+    .c-button--header .arrow {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(-45deg) scale(0.5);
+    }
+
+    /* ===== Hero ===== */
+    .p-blog-hero {
+      background: var(--color-blue);
+      padding-top: var(--header-h);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .p-blog-hero__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    .p-blog-hero__inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 80px 40px 90px;
+    }
+
+    .p-blog-hero__title {
+      font-family: var(--font-en);
+      font-size: clamp(56px, 8vw, 100px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+    }
+
+    .p-blog-hero__subtitle {
+      display: block;
+      font-size: clamp(14px, 1.5vw, 18px);
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.08em;
+      margin-top: 12px;
+    }
+
+    /* ===== Blog List ===== */
+    .p-blog-list {
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 80px 40px 120px;
+    }
+
+    .p-blog-list__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+
+    /* ===== Blog Card ===== */
+    .p-blog-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.4s var(--ease);
+    }
+
+    .p-blog-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .p-blog-card__image {
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .p-blog-card__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease);
+    }
+
+    .p-blog-card:hover .p-blog-card__image img {
+      transform: scale(1.05);
+    }
+
+    .p-blog-card__body {
+      padding: 20px 4px 0;
+    }
+
+    .p-blog-card__meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .p-blog-card__date {
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-light);
+      letter-spacing: 0.04em;
+    }
+
+    .p-blog-card__tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-blue);
+      background: rgba(0, 74, 153, 0.08);
+      padding: 3px 10px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+    }
+
+    .p-blog-card__title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-main);
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+
+    .p-blog-card__excerpt {
+      font-size: 13px;
+      color: var(--color-text-light);
+      line-height: 1.9;
+      margin-top: 10px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ===== Blog Detail ===== */
+    .p-blog-detail {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 40px 120px;
+      display: none;
+    }
+
+    .p-blog-detail.is-active {
+      display: block;
+    }
+
+    .p-blog-detail__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--color-blue);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 32px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .p-blog-detail__back:hover { opacity: 0.6; }
+
+    .p-blog-detail__back svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+    }
+
+    .p-blog-detail__meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .p-blog-detail__date {
+      font-family: var(--font-en);
+      font-size: 14px;
+      color: var(--color-text-light);
+    }
+
+    .p-blog-detail__tag {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-blue);
+      background: rgba(0, 74, 153, 0.08);
+      padding: 3px 12px;
+      border-radius: 3px;
+    }
+
+    .p-blog-detail__title {
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 700;
+      color: var(--color-main);
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      margin-bottom: 32px;
+    }
+
+    .p-blog-detail__hero-image {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 40px;
+    }
+
+    .p-blog-detail__content {
+      font-size: 15px;
+      line-height: 2.2;
+      color: var(--color-text);
+    }
+
+    .p-blog-detail__content h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-main);
+      margin: 48px 0 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--color-blue);
+    }
+
+    .p-blog-detail__content h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-main);
+      margin: 36px 0 12px;
+    }
+
+    .p-blog-detail__content p {
+      margin-bottom: 20px;
+    }
+
+    .p-blog-detail__content img {
+      width: 100%;
+      border-radius: 6px;
+      margin: 24px 0;
+    }
+
+    .p-blog-detail__content ul {
+      padding-left: 24px;
+      margin-bottom: 20px;
+    }
+
+    .p-blog-detail__content li {
+      margin-bottom: 8px;
+    }
+
+    .p-blog-detail__share {
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .p-blog-detail__share-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-light);
+      letter-spacing: 0.06em;
+    }
+
+    /* ===== Footer ===== */
+    .g-footer {
+      background: var(--color-main);
+      color: var(--color-white);
+      padding: 80px 0 40px;
+    }
+
+    .g-footer__inner {
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .g-footer__logo-en {
+      font-family: var(--font-en);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .g-footer__logo-ja {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    .g-footer__info {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.8;
+      margin-top: 16px;
+    }
+
+    .g-footer__nav {
+      display: flex;
+      gap: 24px;
+    }
+
+    .g-footer__nav-link {
+      font-family: var(--font-en);
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+
+    .g-footer__nav-link:hover { color: #fff; }
+
+    .g-footer__bottom {
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 40px 40px 0;
+      margin-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .g-footer__copyright {
+      font-family: var(--font-en);
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.06em;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .p-blog-list__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+      }
+
+      .g-header-nav__list { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .p-blog-list__grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .p-blog-list {
+        padding: 48px 20px 80px;
+      }
+
+      .p-blog-detail {
+        padding: 40px 20px 80px;
+      }
+
+      .g-footer__inner {
+        grid-template-columns: 1fr;
+      }
+
+      .g-footer__nav {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .g-header__inner {
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="g-header">
+    <div class="g-header__inner">
+      <a href="index.html" class="g-header__logo">
+        <p class="g-header__logo-en">WORLD SPIRITS</p>
+        <p class="g-header__logo-ja">ワールドスピリッツ株式会社</p>
+      </a>
+      <nav>
+        <ul class="g-header-nav__list">
+          <li><a class="g-header-nav__link" href="index.html#about">About</a></li>
+          <li><a class="g-header-nav__link" href="index.html#service">Products</a></li>
+          <li><a class="g-header-nav__link" href="index.html#works">Works</a></li>
+          <li><a class="g-header-nav__link" href="index.html#clients">Clients</a></li>
+          <li><a class="g-header-nav__link" href="index.html#company">Company</a></li>
+        </ul>
+      </nav>
+      <div>
+        <a class="c-button--header" href="contact.html">
+          Contact <span class="arrow"></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="p-blog-hero">
+    <div class="p-blog-hero__grid"></div>
+    <div class="p-blog-hero__inner">
+      <h1 class="p-blog-hero__title">Blog</h1>
+      <span class="p-blog-hero__subtitle">最新情報・お知らせ</span>
+    </div>
+  </section>
+
+  <!-- Blog List -->
+  <section class="p-blog-list" id="blogList">
+    <div class="p-blog-list__grid">
+
+      <!-- Card 1 -->
+      <a class="p-blog-card" href="#" onclick="showDetail(0, event)">
+        <div class="p-blog-card__image">
+          <img src="images/IMG_1952.JPG" alt="春の新作パールコレクション">
+        </div>
+        <div class="p-blog-card__body">
+          <div class="p-blog-card__meta">
+            <span class="p-blog-card__date">2026.03.15</span>
+            <span class="p-blog-card__tag">新商品</span>
+          </div>
+          <h2 class="p-blog-card__title">春の新作パールコレクションが入荷しました</h2>
+          <p class="p-blog-card__excerpt">今シーズンの注目は、やわらかなピンクゴールドとアコヤ真珠を組み合わせた新シリーズ。上品でありながら日常使いにもぴったりなデザインが揃いました。全国の取り扱い店舗にてお手に取っていただけます。</p>
+        </div>
+      </a>
+
+      <!-- Card 2 -->
+      <a class="p-blog-card" href="#" onclick="showDetail(1, event)">
+        <div class="p-blog-card__image">
+          <img src="images/IMG_1948.JPG" alt="イオンモール催事レポート">
+        </div>
+        <div class="p-blog-card__body">
+          <div class="p-blog-card__meta">
+            <span class="p-blog-card__date">2026.03.08</span>
+            <span class="p-blog-card__tag">イベント</span>
+          </div>
+          <h2 class="p-blog-card__title">イオンモール鹿児島 春の特別催事を開催しました</h2>
+          <p class="p-blog-card__excerpt">3月1日から7日間にわたり、イオンモール鹿児島にて春の特別催事を開催。多くのお客様にご来場いただき、特にハンドバッグの新作ラインナップが好評でした。</p>
+        </div>
+      </a>
+
+      <!-- Card 3 -->
+      <a class="p-blog-card" href="#" onclick="showDetail(2, event)">
+        <div class="p-blog-card__image">
+          <img src="images/IMG_2055.JPG" alt="スタッフおすすめジュエリー">
+        </div>
+        <div class="p-blog-card__body">
+          <div class="p-blog-card__meta">
+            <span class="p-blog-card__date">2026.02.20</span>
+            <span class="p-blog-card__tag">スタッフ推薦</span>
+          </div>
+          <h2 class="p-blog-card__title">スタッフが選ぶ、春の装いに合わせたいジュエリー3選</h2>
+          <p class="p-blog-card__excerpt">卒業式・入学式シーズンに向けて、スタッフが厳選したジュエリーをご紹介。フォーマルからカジュアルまで、幅広いシーンで活躍するアイテムを集めました。</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Blog Detail (hidden by default) -->
+  <article class="p-blog-detail" id="blogDetail0">
+    <div class="p-blog-detail__back" onclick="backToList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      記事一覧に戻る
+    </div>
+    <div class="p-blog-detail__meta">
+      <span class="p-blog-detail__date">2026.03.15</span>
+      <span class="p-blog-detail__tag">新商品</span>
+    </div>
+    <h1 class="p-blog-detail__title">春の新作パールコレクションが入荷しました</h1>
+    <img class="p-blog-detail__hero-image" src="images/IMG_1952.JPG" alt="春の新作パールコレクション">
+    <div class="p-blog-detail__content">
+      <p>桜の季節を前に、ワールドスピリッツが自信を持ってお届けする新作パールコレクションが全国の取り扱い店舗に入荷いたしました。</p>
+
+      <h2>今シーズンの注目ポイント</h2>
+      <p>今回のコレクションでは、従来のクラシックなデザインに加え、より普段使いを意識したカジュアルラインを拡充しました。やわらかなピンクゴールドとアコヤ真珠を組み合わせた新シリーズは、上品でありながら軽やかな印象を与えてくれます。</p>
+      <img src="images/IMG_2050.JPG" alt="パールジュエリーのディスプレイ">
+
+      <h2>ラインナップのご紹介</h2>
+      <ul>
+        <li><strong>クラシックライン</strong> — 冠婚葬祭に最適な、正統派のパールネックレスとイヤリング</li>
+        <li><strong>カジュアルライン</strong> — オフィスや休日のお出かけに気軽に付けられるデザイン</li>
+        <li><strong>ギフトライン</strong> — 大切な方への贈り物にぴったりな特別パッケージ付き</li>
+      </ul>
+
+      <h2>お取り扱い店舗</h2>
+      <p>全国のイオン、イトーヨーカドー、ゆめタウンをはじめとする主要店舗にてお取り扱いしております。ぜひ店頭でお手に取ってご覧ください。商品に関するお問い合わせは、お気軽にご連絡ください。</p>
+    </div>
+    <div class="p-blog-detail__share">
+      <span class="p-blog-detail__share-label">SHARE</span>
+    </div>
+  </article>
+
+  <article class="p-blog-detail" id="blogDetail1">
+    <div class="p-blog-detail__back" onclick="backToList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      記事一覧に戻る
+    </div>
+    <div class="p-blog-detail__meta">
+      <span class="p-blog-detail__date">2026.03.08</span>
+      <span class="p-blog-detail__tag">イベント</span>
+    </div>
+    <h1 class="p-blog-detail__title">イオンモール鹿児島 春の特別催事を開催しました</h1>
+    <img class="p-blog-detail__hero-image" src="images/IMG_1948.JPG" alt="催事の様子">
+    <div class="p-blog-detail__content">
+      <p>3月1日から7日までの7日間、イオンモール鹿児島にて「ワールドスピリッツ 春の特別催事」を開催いたしました。期間中、多くのお客様にご来場いただき、誠にありがとうございました。</p>
+
+      <h2>催事の見どころ</h2>
+      <p>今回の催事では、春の新作ハンドバッグを中心に、ファッション雑貨からジュエリーまで幅広い商品を展開。特に人気を集めたのは、イタリア製レザーを使用した新作トートバッグで、初日から多くのお客様にお求めいただきました。</p>
+      <img src="images/IMG_1941.JPG" alt="店舗の様子">
+
+      <h2>お客様の声</h2>
+      <p>「普段は見ることのできない商品を実際に手に取れて良かった」「スタッフの方の商品知識が豊富で、選ぶのがとても楽しかった」など、多くの嬉しいお声をいただきました。</p>
+
+      <h3>次回の催事予定</h3>
+      <p>次回は4月中旬に、ゆめタウン博多にて開催を予定しております。詳しい日程が決まりましたら、改めてお知らせいたします。皆様のご来場を心よりお待ちしております。</p>
+    </div>
+    <div class="p-blog-detail__share">
+      <span class="p-blog-detail__share-label">SHARE</span>
+    </div>
+  </article>
+
+  <article class="p-blog-detail" id="blogDetail2">
+    <div class="p-blog-detail__back" onclick="backToList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      記事一覧に戻る
+    </div>
+    <div class="p-blog-detail__meta">
+      <span class="p-blog-detail__date">2026.02.20</span>
+      <span class="p-blog-detail__tag">スタッフ推薦</span>
+    </div>
+    <h1 class="p-blog-detail__title">スタッフが選ぶ、春の装いに合わせたいジュエリー3選</h1>
+    <img class="p-blog-detail__hero-image" src="images/IMG_2055.JPG" alt="おすすめジュエリー">
+    <div class="p-blog-detail__content">
+      <p>卒業式・入学式のシーズンが近づいてまいりました。今回は、ワールドスピリッツのスタッフが春のフォーマルシーンからカジュアルまで活躍するジュエリーを3点厳選してご紹介いたします。</p>
+
+      <h2>1. アコヤ真珠ネックレス</h2>
+      <p>フォーマルシーンの定番ともいえるアコヤ真珠のネックレス。当社が取り扱う商品は、一粒一粒の照りと巻きにこだわり厳選したもののみ。卒業式や入学式はもちろん、結婚式やパーティーなど幅広いシーンで長くお使いいただけます。</p>
+      <img src="images/IMG_2830.JPG" alt="パールネックレス">
+
+      <h2>2. K18ゴールドピアス</h2>
+      <p>シンプルなデザインのK18ゴールドピアスは、春のスーツスタイルに上品なアクセントを添えてくれます。軽量で着け心地も良く、一日中着けていても疲れにくいのが魅力です。</p>
+
+      <h2>3. シルバーバングル</h2>
+      <p>カジュアルな春の装いにぴったりのシルバーバングル。シンプルなデザインながら存在感があり、腕元を美しく演出します。入学式の後の食事会など、少しカジュアルダウンしたシーンにもおすすめです。</p>
+      <img src="images/IMG_2829.JPG" alt="シルバーアクセサリー">
+
+      <p>いずれの商品も、全国の取り扱い店舗にてご覧いただけます。お近くの店舗で、ぜひ実際にお手に取ってみてください。</p>
+    </div>
+    <div class="p-blog-detail__share">
+      <span class="p-blog-detail__share-label">SHARE</span>
+    </div>
+  </article>
+
+  <!-- Footer -->
+  <footer class="g-footer">
+    <div class="g-footer__inner">
+      <div>
+        <p class="g-footer__logo-en">WORLD SPIRITS</p>
+        <p class="g-footer__logo-ja">ワールドスピリッツ株式会社</p>
+        <div class="g-footer__info">
+          〒890-0005 鹿児島県鹿児島市下伊敷2-29-6<br>
+          TEL / FAX: 099-248-9744
+        </div>
+      </div>
+      <nav class="g-footer__nav">
+        <a class="g-footer__nav-link" href="index.html#about">About</a>
+        <a class="g-footer__nav-link" href="index.html#service">Products</a>
+        <a class="g-footer__nav-link" href="index.html#works">Works</a>
+        <a class="g-footer__nav-link" href="index.html#clients">Clients</a>
+        <a class="g-footer__nav-link" href="index.html#company">Company</a>
+        <a class="g-footer__nav-link" href="contact.html">Contact</a>
+      </nav>
+    </div>
+    <div class="g-footer__bottom">
+      <p class="g-footer__copyright">&copy; 2026 World Spirits Co., Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    function showDetail(index, e) {
+      e.preventDefault();
+      document.getElementById('blogList').style.display = 'none';
+      document.getElementById('blogDetail' + index).classList.add('is-active');
+      window.scrollTo({ top: document.querySelector('.p-blog-hero').offsetHeight + 80, behavior: 'smooth' });
+    }
+
+    function backToList() {
+      document.querySelectorAll('.p-blog-detail').forEach(function(el) {
+        el.classList.remove('is-active');
+      });
+      document.getElementById('blogList').style.display = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>

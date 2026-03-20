@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>News｜新着情報｜ワールドスピリッツ株式会社</title>
+  <meta name="description" content="ワールドスピリッツ株式会社の新着情報・お知らせ一覧です。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fustat:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-blue: #004a99;
+      --color-blue-dark: #003d7a;
+      --color-main: #1a1a2e;
+      --color-accent: #c4a265;
+      --color-white: #ffffff;
+      --color-offwhite: #f8f6f3;
+      --color-text: #333333;
+      --color-text-light: #888888;
+      --color-border: #e5e0d8;
+      --font-en: "Fustat", "Helvetica Neue", sans-serif;
+      --font-ja: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+      --container-l: 1280px;
+      --header-h: 80px;
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body {
+      font-family: var(--font-ja);
+      font-weight: 400;
+      color: var(--color-text);
+      background: var(--color-white);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== Header ===== */
+    .g-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-h);
+      z-index: 100;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .g-header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .g-header__logo { text-decoration: none; }
+
+    .g-header__logo-en {
+      font-family: var(--font-en);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-blue);
+      letter-spacing: 0.08em;
+    }
+
+    .g-header__logo-ja {
+      font-size: 10px;
+      color: var(--color-blue);
+      opacity: 0.6;
+      letter-spacing: 0.06em;
+    }
+
+    .g-header-nav__list {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .g-header-nav__link {
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-blue);
+      letter-spacing: 0.06em;
+      transition: opacity 0.3s;
+    }
+
+    .g-header-nav__link:hover { opacity: 0.6; }
+
+    .c-button--header {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--color-blue);
+      color: var(--color-white);
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 12px 24px;
+      border: 1px solid var(--color-blue);
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+
+    .c-button--header:hover { opacity: 0.85; }
+
+    .c-button--header .arrow {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(-45deg) scale(0.5);
+    }
+
+    /* ===== Hero ===== */
+    .p-news-hero {
+      background: var(--color-blue);
+      padding-top: var(--header-h);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .p-news-hero__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    .p-news-hero__inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 80px 40px 90px;
+    }
+
+    .p-news-hero__title {
+      font-family: var(--font-en);
+      font-size: clamp(56px, 8vw, 100px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+    }
+
+    .p-news-hero__subtitle {
+      display: block;
+      font-size: clamp(14px, 1.5vw, 18px);
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.08em;
+      margin-top: 12px;
+    }
+
+    /* ===== Filter ===== */
+    .p-news-filter {
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 40px 40px 0;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .p-news-filter__btn {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 20px;
+      border: 1px solid var(--color-border);
+      background: #fff;
+      color: var(--color-text);
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.3s;
+    }
+
+    .p-news-filter__btn.is-active,
+    .p-news-filter__btn:hover {
+      background: var(--color-blue);
+      border-color: var(--color-blue);
+      color: #fff;
+    }
+
+    /* ===== News List ===== */
+    .p-news-list {
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 40px 40px 120px;
+    }
+
+    .p-news-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--color-border);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.3s;
+    }
+
+    .p-news-item:first-child {
+      border-top: 1px solid var(--color-border);
+    }
+
+    .p-news-item:hover {
+      background: rgba(0, 74, 153, 0.02);
+    }
+
+    .p-news-item__date {
+      font-family: var(--font-en);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-light);
+      letter-spacing: 0.04em;
+      min-width: 110px;
+      padding-top: 2px;
+    }
+
+    .p-news-item__category {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-blue);
+      background: rgba(0, 74, 153, 0.08);
+      padding: 3px 12px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+      min-width: fit-content;
+      flex-shrink: 0;
+    }
+
+    .p-news-item__title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-main);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .p-news-item__arrow {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .p-news-item__arrow svg {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: var(--color-text-light);
+      stroke-width: 2;
+      transition: stroke 0.3s, transform 0.3s;
+    }
+
+    .p-news-item:hover .p-news-item__arrow svg {
+      stroke: var(--color-blue);
+      transform: translateX(3px);
+    }
+
+    /* ===== Detail ===== */
+    .p-news-detail {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 40px 120px;
+      display: none;
+    }
+
+    .p-news-detail.is-active {
+      display: block;
+    }
+
+    .p-news-detail__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--color-blue);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 32px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .p-news-detail__back:hover { opacity: 0.6; }
+
+    .p-news-detail__back svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+    }
+
+    .p-news-detail__meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .p-news-detail__date {
+      font-family: var(--font-en);
+      font-size: 14px;
+      color: var(--color-text-light);
+    }
+
+    .p-news-detail__tag {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-blue);
+      background: rgba(0, 74, 153, 0.08);
+      padding: 3px 12px;
+      border-radius: 3px;
+    }
+
+    .p-news-detail__title {
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 700;
+      color: var(--color-main);
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--color-blue);
+    }
+
+    .p-news-detail__content {
+      font-size: 15px;
+      line-height: 2.2;
+      color: var(--color-text);
+    }
+
+    .p-news-detail__content p {
+      margin-bottom: 20px;
+    }
+
+    .p-news-detail__content h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-main);
+      margin: 36px 0 12px;
+    }
+
+    .p-news-detail__content ul {
+      padding-left: 24px;
+      margin-bottom: 20px;
+    }
+
+    .p-news-detail__content li {
+      margin-bottom: 8px;
+    }
+
+    .p-news-detail__content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+    }
+
+    .p-news-detail__content th,
+    .p-news-detail__content td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 14px;
+    }
+
+    .p-news-detail__content th {
+      font-weight: 600;
+      color: var(--color-main);
+      width: 140px;
+      white-space: nowrap;
+    }
+
+    /* ===== Footer ===== */
+    .g-footer {
+      background: var(--color-main);
+      color: var(--color-white);
+      padding: 80px 0 40px;
+    }
+
+    .g-footer__inner {
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .g-footer__logo-en {
+      font-family: var(--font-en);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .g-footer__logo-ja {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    .g-footer__info {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.8;
+      margin-top: 16px;
+    }
+
+    .g-footer__nav {
+      display: flex;
+      gap: 24px;
+    }
+
+    .g-footer__nav-link {
+      font-family: var(--font-en);
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+
+    .g-footer__nav-link:hover { color: #fff; }
+
+    .g-footer__bottom {
+      max-width: var(--container-l);
+      margin: 0 auto;
+      padding: 40px 40px 0;
+      margin-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .g-footer__copyright {
+      font-family: var(--font-en);
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.06em;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .g-header-nav__list { display: none; }
+
+      .p-news-item {
+        flex-wrap: wrap;
+        gap: 8px 16px;
+      }
+
+      .p-news-item__date { min-width: auto; }
+
+      .p-news-list { padding: 32px 20px 80px; }
+      .p-news-detail { padding: 40px 20px 80px; }
+      .p-news-filter { padding: 32px 20px 0; }
+
+      .g-footer__inner {
+        grid-template-columns: 1fr;
+      }
+
+      .g-footer__nav {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .g-header__inner { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="g-header">
+    <div class="g-header__inner">
+      <a href="index.html" class="g-header__logo">
+        <p class="g-header__logo-en">WORLD SPIRITS</p>
+        <p class="g-header__logo-ja">ワールドスピリッツ株式会社</p>
+      </a>
+      <nav>
+        <ul class="g-header-nav__list">
+          <li><a class="g-header-nav__link" href="index.html#about">About</a></li>
+          <li><a class="g-header-nav__link" href="index.html#service">Products</a></li>
+          <li><a class="g-header-nav__link" href="index.html#works">Works</a></li>
+          <li><a class="g-header-nav__link" href="index.html#clients">Clients</a></li>
+          <li><a class="g-header-nav__link" href="index.html#company">Company</a></li>
+        </ul>
+      </nav>
+      <div>
+        <a class="c-button--header" href="contact.html">
+          Contact <span class="arrow"></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="p-news-hero">
+    <div class="p-news-hero__grid"></div>
+    <div class="p-news-hero__inner">
+      <h1 class="p-news-hero__title">News</h1>
+      <span class="p-news-hero__subtitle">新着情報・お知らせ</span>
+    </div>
+  </section>
+
+  <!-- Filter -->
+  <div class="p-news-filter" id="newsFilter">
+    <button class="p-news-filter__btn is-active" data-filter="all">すべて</button>
+    <button class="p-news-filter__btn" data-filter="お知らせ">お知らせ</button>
+    <button class="p-news-filter__btn" data-filter="イベント">イベント</button>
+    <button class="p-news-filter__btn" data-filter="採用">採用</button>
+  </div>
+
+  <!-- News List -->
+  <div class="p-news-list" id="newsList">
+
+    <a class="p-news-item" href="#" data-category="お知らせ" onclick="showNewsDetail(0, event)">
+      <span class="p-news-item__date">2026.03.15</span>
+      <span class="p-news-item__category">お知らせ</span>
+      <span class="p-news-item__title">春の新作コレクションが入荷しました</span>
+      <span class="p-news-item__arrow"><svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg></span>
+    </a>
+
+    <a class="p-news-item" href="#" data-category="イベント" onclick="showNewsDetail(1, event)">
+      <span class="p-news-item__date">2026.03.01</span>
+      <span class="p-news-item__category">イベント</span>
+      <span class="p-news-item__title">イオンモール鹿児島店にて春の特別催事を開催いたします</span>
+      <span class="p-news-item__arrow"><svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg></span>
+    </a>
+
+    <a class="p-news-item" href="#" data-category="お知らせ" onclick="showNewsDetail(2, event)">
+      <span class="p-news-item__date">2026.02.20</span>
+      <span class="p-news-item__category">お知らせ</span>
+      <span class="p-news-item__title">ゆめタウン博多店の営業時間変更のお知らせ</span>
+      <span class="p-news-item__arrow"><svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg></span>
+    </a>
+
+    <a class="p-news-item" href="#" data-category="採用" onclick="showNewsDetail(3, event)">
+      <span class="p-news-item__date">2026.02.10</span>
+      <span class="p-news-item__category">採用</span>
+      <span class="p-news-item__title">2026年度 販売スタッフを募集しています</span>
+      <span class="p-news-item__arrow"><svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg></span>
+    </a>
+
+    <a class="p-news-item" href="#" data-category="お知らせ" onclick="showNewsDetail(4, event)">
+      <span class="p-news-item__date">2026.01.10</span>
+      <span class="p-news-item__category">お知らせ</span>
+      <span class="p-news-item__title">年末年始の営業についてのお知らせ</span>
+      <span class="p-news-item__arrow"><svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg></span>
+    </a>
+
+    <a class="p-news-item" href="#" data-category="イベント" onclick="showNewsDetail(5, event)">
+      <span class="p-news-item__date">2025.12.01</span>
+      <span class="p-news-item__category">イベント</span>
+      <span class="p-news-item__title">冬のジュエリーフェア開催レポート</span>
+      <span class="p-news-item__arrow"><svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg></span>
+    </a>
+
+  </div>
+
+  <!-- News Details -->
+  <article class="p-news-detail" id="newsDetail0">
+    <div class="p-news-detail__back" onclick="backToNewsList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      一覧に戻る
+    </div>
+    <div class="p-news-detail__meta">
+      <span class="p-news-detail__date">2026.03.15</span>
+      <span class="p-news-detail__tag">お知らせ</span>
+    </div>
+    <h1 class="p-news-detail__title">春の新作コレクションが入荷しました</h1>
+    <div class="p-news-detail__content">
+      <p>平素よりワールドスピリッツをご愛顧いただき、誠にありがとうございます。</p>
+      <p>この度、2026年春の新作コレクションが全国の取り扱い店舗に入荷いたしました。今シーズンは、パールジュエリーの新ラインをはじめ、春らしいカラーリングのハンドバッグ・財布などを豊富に取り揃えております。</p>
+      <h3>新作ラインナップ</h3>
+      <ul>
+        <li>アコヤ真珠 新作ネックレス・ピアスコレクション</li>
+        <li>イタリアンレザー スプリングカラー ハンドバッグ</li>
+        <li>本革 長財布・コンパクト財布（新色追加）</li>
+        <li>シルバー925 春の限定デザインアクセサリー</li>
+      </ul>
+      <p>ぜひお近くの店舗にて、お手に取ってご覧ください。商品に関するお問い合わせは、お電話またはお問い合わせフォームにてお気軽にご連絡ください。</p>
+    </div>
+  </article>
+
+  <article class="p-news-detail" id="newsDetail1">
+    <div class="p-news-detail__back" onclick="backToNewsList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      一覧に戻る
+    </div>
+    <div class="p-news-detail__meta">
+      <span class="p-news-detail__date">2026.03.01</span>
+      <span class="p-news-detail__tag">イベント</span>
+    </div>
+    <h1 class="p-news-detail__title">イオンモール鹿児島店にて春の特別催事を開催いたします</h1>
+    <div class="p-news-detail__content">
+      <p>イオンモール鹿児島にて、ワールドスピリッツの春の特別催事を開催いたします。期間中は新作商品の先行販売や、催事限定のお得なセットもご用意しております。</p>
+      <table>
+        <tr><th>開催期間</th><td>2026年3月1日（日）〜 3月7日（土）</td></tr>
+        <tr><th>開催場所</th><td>イオンモール鹿児島 1F 催事スペース</td></tr>
+        <tr><th>営業時間</th><td>10:00 〜 21:00</td></tr>
+      </table>
+      <p>皆様のご来場を心よりお待ちしております。</p>
+    </div>
+  </article>
+
+  <article class="p-news-detail" id="newsDetail2">
+    <div class="p-news-detail__back" onclick="backToNewsList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      一覧に戻る
+    </div>
+    <div class="p-news-detail__meta">
+      <span class="p-news-detail__date">2026.02.20</span>
+      <span class="p-news-detail__tag">お知らせ</span>
+    </div>
+    <h1 class="p-news-detail__title">ゆめタウン博多店の営業時間変更のお知らせ</h1>
+    <div class="p-news-detail__content">
+      <p>平素よりワールドスピリッツをご利用いただき、誠にありがとうございます。</p>
+      <p>2026年3月1日より、ゆめタウン博多店の営業時間が下記の通り変更となります。</p>
+      <table>
+        <tr><th>変更前</th><td>10:00 〜 20:00</td></tr>
+        <tr><th>変更後</th><td>10:00 〜 21:00</td></tr>
+        <tr><th>変更日</th><td>2026年3月1日（日）より</td></tr>
+      </table>
+      <p>お客様にはご不便をおかけしますが、何卒ご理解のほどよろしくお願いいたします。</p>
+    </div>
+  </article>
+
+  <article class="p-news-detail" id="newsDetail3">
+    <div class="p-news-detail__back" onclick="backToNewsList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      一覧に戻る
+    </div>
+    <div class="p-news-detail__meta">
+      <span class="p-news-detail__date">2026.02.10</span>
+      <span class="p-news-detail__tag">採用</span>
+    </div>
+    <h1 class="p-news-detail__title">2026年度 販売スタッフを募集しています</h1>
+    <div class="p-news-detail__content">
+      <p>ワールドスピリッツ株式会社では、全国の店舗にて一緒に働いていただける販売スタッフを募集しております。</p>
+      <h3>募集要項</h3>
+      <table>
+        <tr><th>職種</th><td>販売スタッフ（正社員・パート）</td></tr>
+        <tr><th>勤務地</th><td>全国の取り扱い店舗</td></tr>
+        <tr><th>仕事内容</th><td>ファッション雑貨・ジュエリーの接客販売、商品管理、ディスプレイ</td></tr>
+        <tr><th>応募条件</th><td>経験不問、接客が好きな方歓迎</td></tr>
+      </table>
+      <p>ご応募・お問い合わせは、お問い合わせフォームまたはお電話（099-248-9744）にてお気軽にご連絡ください。</p>
+    </div>
+  </article>
+
+  <article class="p-news-detail" id="newsDetail4">
+    <div class="p-news-detail__back" onclick="backToNewsList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      一覧に戻る
+    </div>
+    <div class="p-news-detail__meta">
+      <span class="p-news-detail__date">2026.01.10</span>
+      <span class="p-news-detail__tag">お知らせ</span>
+    </div>
+    <h1 class="p-news-detail__title">年末年始の営業についてのお知らせ</h1>
+    <div class="p-news-detail__content">
+      <p>平素よりワールドスピリッツをご愛顧いただき、誠にありがとうございます。年末年始の営業日程についてお知らせいたします。</p>
+      <table>
+        <tr><th>休業期間</th><td>2025年12月30日（火）〜 2026年1月3日（土）</td></tr>
+        <tr><th>営業再開</th><td>2026年1月4日（日）より通常営業</td></tr>
+      </table>
+      <p>各店舗の営業時間は、施設の営業スケジュールに準じます。休業期間中のお問い合わせにつきましては、1月4日以降に順次対応させていただきます。</p>
+      <p>本年もワールドスピリッツをご愛顧いただき、誠にありがとうございました。来年も変わらぬご支援を賜りますよう、よろしくお願い申し上げます。</p>
+    </div>
+  </article>
+
+  <article class="p-news-detail" id="newsDetail5">
+    <div class="p-news-detail__back" onclick="backToNewsList()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      一覧に戻る
+    </div>
+    <div class="p-news-detail__meta">
+      <span class="p-news-detail__date">2025.12.01</span>
+      <span class="p-news-detail__tag">イベント</span>
+    </div>
+    <h1 class="p-news-detail__title">冬のジュエリーフェア開催レポート</h1>
+    <div class="p-news-detail__content">
+      <p>11月23日〜29日にかけて開催いたしました「冬のジュエリーフェア」のレポートをお届けいたします。</p>
+      <p>イオンモール鹿児島をメイン会場として開催した今回のフェアでは、クリスマスギフトにぴったりのパールジュエリーやシルバーアクセサリーを特別価格にてご提供いたしました。</p>
+      <h3>来場者の皆様の声</h3>
+      <ul>
+        <li>「普段なかなか見られない商品を間近で見ることができて良かった」</li>
+        <li>「スタッフの方に丁寧にアドバイスいただき、素敵なプレゼントを選べました」</li>
+        <li>「毎年楽しみにしています。来年もぜひ開催してほしい」</li>
+      </ul>
+      <p>多くのお客様にご来場いただき、誠にありがとうございました。今後もこのようなイベントを通じて、皆様に上質な商品をお届けしてまいります。</p>
+    </div>
+  </article>
+
+  <!-- Footer -->
+  <footer class="g-footer">
+    <div class="g-footer__inner">
+      <div>
+        <p class="g-footer__logo-en">WORLD SPIRITS</p>
+        <p class="g-footer__logo-ja">ワールドスピリッツ株式会社</p>
+        <div class="g-footer__info">
+          〒890-0005 鹿児島県鹿児島市下伊敷2-29-6<br>
+          TEL / FAX: 099-248-9744
+        </div>
+      </div>
+      <nav class="g-footer__nav">
+        <a class="g-footer__nav-link" href="index.html#about">About</a>
+        <a class="g-footer__nav-link" href="index.html#service">Products</a>
+        <a class="g-footer__nav-link" href="index.html#works">Works</a>
+        <a class="g-footer__nav-link" href="index.html#clients">Clients</a>
+        <a class="g-footer__nav-link" href="index.html#company">Company</a>
+        <a class="g-footer__nav-link" href="blog.html">Blog</a>
+        <a class="g-footer__nav-link" href="contact.html">Contact</a>
+      </nav>
+    </div>
+    <div class="g-footer__bottom">
+      <p class="g-footer__copyright">&copy; 2026 World Spirits Co., Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Filter
+    var filterBtns = document.querySelectorAll('.p-news-filter__btn');
+    var newsItems = document.querySelectorAll('.p-news-item');
+
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(function(b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        var filter = btn.dataset.filter;
+        newsItems.forEach(function(item) {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Detail
+    function showNewsDetail(index, e) {
+      e.preventDefault();
+      document.getElementById('newsList').style.display = 'none';
+      document.querySelector('.p-news-filter').style.display = 'none';
+      document.getElementById('newsDetail' + index).classList.add('is-active');
+      window.scrollTo({ top: document.querySelector('.p-news-hero').offsetHeight + 80, behavior: 'smooth' });
+    }
+
+    function backToNewsList() {
+      document.querySelectorAll('.p-news-detail').forEach(function(el) {
+        el.classList.remove('is-active');
+      });
+      document.getElementById('newsList').style.display = '';
+      document.querySelector('.p-news-filter').style.display = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>

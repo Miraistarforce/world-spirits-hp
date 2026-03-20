@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact｜お問い合わせ｜ワールドスピリッツ株式会社</title>
+  <meta name="description" content="ワールドスピリッツ株式会社へのお問い合わせフォームです。商品やお取引に関するご質問がございましたら、お気軽にご相談ください。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --color-blue: #1a56a8;
+      --color-blue-dark: #133f7a;
+      --color-white: #fff;
+      --color-text: #1a1a2e;
+      --color-text-light: #6b7280;
+      --color-border: #e5e7eb;
+      --color-bg: #f9fafb;
+      --color-accent: #2563eb;
+      --color-error: #dc2626;
+      --font-en: 'Inter', sans-serif;
+      --font-ja: 'Noto Sans JP', sans-serif;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    body {
+      font-family: var(--font-ja);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== Header ===== */
+    .c-header {
+      background: var(--color-blue);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .c-header__logo {
+      color: #fff;
+      font-family: var(--font-en);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .c-header__logo-ja {
+      display: block;
+      font-family: var(--font-ja);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      opacity: 0.6;
+      margin-top: 2px;
+    }
+
+    .c-header__back {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+
+    .c-header__back:hover { color: #fff; }
+
+    /* ===== Layout ===== */
+    .p-contact {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ===== Sidebar ===== */
+    .p-contact__side {
+      background: var(--color-blue);
+      padding: 60px 32px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .p-contact__steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .p-contact__step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: rgba(255,255,255,0.35);
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      transition: color 0.3s;
+    }
+
+    .p-contact__step.is-current {
+      color: #fff;
+    }
+
+    .p-contact__step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .p-contact__step.is-current .p-contact__step-icon {
+      background: #fff;
+      color: var(--color-blue);
+      border-color: #fff;
+    }
+
+    .p-contact__count {
+      margin-top: 60px;
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+
+    .p-contact__count-num {
+      display: block;
+      margin-top: 8px;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .p-contact__count-num span {
+      font-family: var(--font-en);
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ===== Main ===== */
+    .p-contact__main {
+      padding: 60px 80px 100px;
+      max-width: 860px;
+    }
+
+    .p-contact__title {
+      margin-bottom: 12px;
+    }
+
+    .p-contact__title-ja {
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 700;
+      color: var(--color-text);
+      letter-spacing: 0.04em;
+    }
+
+    .p-contact__title-en {
+      font-family: var(--font-en);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-blue);
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    .p-contact__lead {
+      font-size: 14px;
+      line-height: 2;
+      color: var(--color-text-light);
+      margin-bottom: 48px;
+    }
+
+    /* ===== Form ===== */
+    .c-form__group {
+      margin-top: 36px;
+    }
+
+    .c-form__group:first-child {
+      margin-top: 0;
+    }
+
+    .c-form__label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .c-form__label-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text);
+      letter-spacing: 0.04em;
+    }
+
+    .c-form__req {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-error);
+      background: #fef2f2;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.06em;
+    }
+
+    .c-form__input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-family: var(--font-ja);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--color-text);
+      transition: border-color 0.3s, box-shadow 0.3s;
+      outline: none;
+    }
+
+    .c-form__input:focus {
+      border-color: var(--color-blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 168, 0.1);
+    }
+
+    .c-form__input::placeholder {
+      color: #c4c9d4;
+    }
+
+    .c-form__input--half {
+      max-width: 320px;
+    }
+
+    .c-form__input--short {
+      max-width: 200px;
+    }
+
+    .c-form__textarea {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-family: var(--font-ja);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--color-text);
+      min-height: 180px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .c-form__textarea:focus {
+      border-color: var(--color-blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 168, 0.1);
+    }
+
+    .c-form__textarea::placeholder {
+      color: #c4c9d4;
+    }
+
+    .c-form__two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .c-form__checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+    }
+
+    .c-form__checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .c-form__checkbox input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-blue);
+    }
+
+    .c-form__caption {
+      font-size: 12px;
+      color: var(--color-text-light);
+      margin-top: 8px;
+      line-height: 1.7;
+    }
+
+    .c-form__divider {
+      margin: 56px 0;
+      border: none;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .c-form__section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-blue);
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .c-form__section-caption {
+      font-size: 13px;
+      color: var(--color-text-light);
+      margin-bottom: 32px;
+    }
+
+    /* ===== Privacy ===== */
+    .c-form__privacy {
+      margin-top: 56px;
+      padding: 28px 32px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .c-form__privacy-text {
+      font-size: 14px;
+      color: var(--color-text);
+    }
+
+    .c-form__privacy-text a {
+      color: var(--color-blue);
+      text-decoration: underline;
+    }
+
+    .c-form__privacy-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .c-form__privacy-label input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-blue);
+    }
+
+    /* ===== Submit ===== */
+    .c-form__foot {
+      margin-top: 48px;
+      text-align: center;
+    }
+
+    .c-form__submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: var(--color-blue);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      font-family: var(--font-ja);
+      letter-spacing: 0.1em;
+      padding: 22px 80px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s var(--ease), transform 0.2s;
+    }
+
+    .c-form__submit:hover {
+      background: var(--color-blue-dark);
+    }
+
+    .c-form__submit:active {
+      transform: scale(0.98);
+    }
+
+    .c-form__submit svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+    }
+
+    /* ===== Footer ===== */
+    .c-footer {
+      text-align: center;
+      padding: 40px;
+      font-family: var(--font-en);
+      font-size: 12px;
+      color: var(--color-text-light);
+      letter-spacing: 0.06em;
+    }
+
+    /* ===== Modal ===== */
+    .c-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s;
+    }
+
+    .c-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .c-modal__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .c-modal__content {
+      position: relative;
+      background: #fff;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 720px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 48px;
+      transform: translateY(20px);
+      transition: transform 0.35s ease;
+    }
+
+    .c-modal.is-open .c-modal__content {
+      transform: translateY(0);
+    }
+
+    .c-modal__close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: var(--color-text-light);
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.3s;
+    }
+
+    .c-modal__close:hover {
+      color: var(--color-text);
+    }
+
+    .c-modal__title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text);
+      letter-spacing: 0.04em;
+    }
+
+    .c-modal__subtitle {
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-blue);
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+      margin-bottom: 32px;
+    }
+
+    .c-modal__body {
+      font-size: 14px;
+      line-height: 2;
+      color: var(--color-text);
+    }
+
+    .c-modal__body h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 28px;
+      margin-bottom: 8px;
+      color: var(--color-text);
+    }
+
+    .c-modal__body ul {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+
+    .c-modal__body li {
+      margin-bottom: 4px;
+    }
+
+    .c-modal__body p + p {
+      margin-top: 12px;
+    }
+
+    /* ===== Confirm ===== */
+    .c-confirm {
+      margin-bottom: 48px;
+    }
+
+    .c-confirm__row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--color-border);
+      align-items: start;
+    }
+
+    .c-confirm__row:first-child {
+      border-top: 1px solid var(--color-border);
+    }
+
+    .c-confirm__label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-light);
+      letter-spacing: 0.04em;
+    }
+
+    .c-confirm__value {
+      font-size: 15px;
+      color: var(--color-text);
+      line-height: 1.8;
+    }
+
+    .c-confirm__buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .c-confirm__back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font-ja);
+      color: var(--color-text-light);
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 18px 40px;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    .c-confirm__back:hover {
+      border-color: var(--color-text);
+      color: var(--color-text);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .p-contact {
+        grid-template-columns: 1fr;
+      }
+
+      .p-contact__side {
+        position: static;
+        height: auto;
+        padding: 32px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .p-contact__steps {
+        flex-direction: row;
+        gap: 20px;
+      }
+
+      .p-contact__count {
+        margin-top: 0;
+      }
+
+      .p-contact__main {
+        padding: 40px 20px 60px;
+      }
+
+      .c-form__two {
+        grid-template-columns: 1fr;
+      }
+
+      .c-form__privacy {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .c-header {
+        padding: 16px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="c-header">
+    <a href="index.html" class="c-header__logo">
+      WORLD SPIRITS
+      <span class="c-header__logo-ja">ワールドスピリッツ株式会社</span>
+    </a>
+    <a href="index.html" class="c-header__back">トップページへ戻る</a>
+  </header>
+
+  <!-- Main -->
+  <div class="p-contact">
+    <!-- Sidebar -->
+    <aside class="p-contact__side">
+      <ul class="p-contact__steps">
+        <li class="p-contact__step is-current">
+          <span class="p-contact__step-icon">1</span>
+          <span>入力</span>
+        </li>
+        <li class="p-contact__step">
+          <span class="p-contact__step-icon">2</span>
+          <span>確認</span>
+        </li>
+        <li class="p-contact__step">
+          <span class="p-contact__step-icon">3</span>
+          <span>送信</span>
+        </li>
+      </ul>
+      <div class="p-contact__count">
+        <p>入力完了まで</p>
+        <p class="p-contact__count-num">あと<span id="remainCount">6</span>項目</p>
+      </div>
+    </aside>
+
+    <!-- Form -->
+    <main class="p-contact__main">
+      <div class="p-contact__title">
+        <h1 class="p-contact__title-ja">お問い合わせ</h1>
+        <p class="p-contact__title-en">Contact</p>
+      </div>
+      <p class="p-contact__lead">
+        ワールドスピリッツに興味を持っていただき誠にありがとうございます。<br>
+        ご不明な点は、お気軽にお問い合せください。<br>
+        以下のフォームに必要事項をご記入の上、「確認する」ボタンを押してください。
+      </p>
+
+      <form id="contactForm" action="" method="post" onsubmit="return handleSubmit(event)">
+        <dl class="c-form__group">
+          <dt>
+            <div class="c-form__label">
+              <span class="c-form__label-text">会社名・団体名</span>
+              <span class="c-form__req">必須</span>
+            </div>
+          </dt>
+          <dd>
+            <input type="text" name="company" required class="c-form__input c-form__input--half" placeholder="例）ワールドスピリッツ株式会社">
+          </dd>
+        </dl>
+
+        <dl class="c-form__group">
+          <dt>
+            <div class="c-form__label">
+              <span class="c-form__label-text">部署名</span>
+            </div>
+          </dt>
+          <dd>
+            <input type="text" name="department" class="c-form__input c-form__input--half" placeholder="例）営業部">
+          </dd>
+        </dl>
+
+        <dl class="c-form__group">
+          <dt>
+            <div class="c-form__label">
+              <span class="c-form__label-text">氏名</span>
+              <span class="c-form__req">必須</span>
+            </div>
+          </dt>
+          <dd>
+            <input type="text" name="name" required class="c-form__input c-form__input--half" placeholder="例）堀 太郎">
+          </dd>
+        </dl>
+
+        <dl class="c-form__group">
+          <dt>
+            <div class="c-form__label">
+              <span class="c-form__label-text">フリガナ</span>
+            </div>
+          </dt>
+          <dd>
+            <input type="text" name="kana" class="c-form__input c-form__input--half" placeholder="例）ホリ タロウ">
+          </dd>
+        </dl>
+
+        <dl class="c-form__group">
+          <dt>
+            <div class="c-form__label">
+              <span class="c-form__label-text">電話番号</span>
+            </div>
+          </dt>
+          <dd>
+            <input type="tel" name="tel" class="c-form__input c-form__input--half" placeholder="例）099-248-9744">
+          </dd>
+        </dl>
+
+        <dl class="c-form__group">
+          <dt>
+            <div class="c-form__label">
+              <span class="c-form__label-text">メールアドレス</span>
+              <span class="c-form__req">必須</span>
+            </div>
+          </dt>
+          <dd>
+            <input type="email" name="email" required class="c-form__input c-form__input--half" placeholder="例）sample@worldspirits.net">
+          </dd>
+        </dl>
+
+        <hr class="c-form__divider">
+
+        <p class="c-form__section-title">お問い合わせ内容</p>
+        <p class="c-form__section-caption">差し支えない範囲でご記入ください。</p>
+
+        <dl class="c-form__group">
+          <dt>
+            <div class="c-form__label">
+              <span class="c-form__label-text">お問い合わせ種別</span>
+              <span class="c-form__req">必須</span>
+            </div>
+          </dt>
+          <dd>
+            <div class="c-form__checkboxes">
+              <label class="c-form__checkbox"><input type="checkbox" name="type[]" value="商品について">商品について</label>
+              <label class="c-form__checkbox"><input type="checkbox" name="type[]" value="お取引について">お取引について</label>
+              <label class="c-form__checkbox"><input type="checkbox" name="type[]" value="採用について">採用について</label>
+              <label class="c-form__checkbox"><input type="checkbox" name="type[]" value="その他">その他</label>
+            </div>
+          </dd>
+        </dl>
+
+        <dl class="c-form__group">
+          <dt>
+            <div class="c-form__label">
+              <span class="c-form__label-text">お問い合わせ詳細</span>
+              <span class="c-form__req">必須</span>
+            </div>
+          </dt>
+          <dd>
+            <textarea name="message" required class="c-form__textarea" placeholder="例）商品のお取り扱いについて詳しく教えてください"></textarea>
+          </dd>
+        </dl>
+
+        <!-- Privacy -->
+        <div class="c-form__privacy">
+          <span class="c-form__privacy-text">
+            <span class="c-form__req" style="margin-right:8px;">必須</span>
+            当社の「<a href="#" onclick="openPrivacy(event)" style="color:#1a56a8;text-decoration:underline;cursor:pointer;">プライバシーポリシー</a>」に同意の上ご利用ください。
+          </span>
+          <label class="c-form__privacy-label">
+            <input type="checkbox" name="privacy" required>
+            同意する
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <div class="c-form__foot">
+          <button type="submit" class="c-form__submit">
+            確認する
+            <svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <footer class="c-footer">
+        &copy; World Spirits Co., Ltd.
+      </footer>
+    </main>
+  </div>
+
+  <!-- Privacy Modal -->
+  <div class="c-modal" id="privacyModal">
+    <div class="c-modal__overlay" onclick="closePrivacy()"></div>
+    <div class="c-modal__content">
+      <button class="c-modal__close" onclick="closePrivacy()">&times;</button>
+      <h2 class="c-modal__title">プライバシーポリシー</h2>
+      <p class="c-modal__subtitle">Privacy Policy</p>
+      <div class="c-modal__body">
+        <p>ワールドスピリッツ株式会社（以下「当社」といいます。）は、お客様の個人情報の保護を重要な責務と認識し、以下のとおりプライバシーポリシーを定め、個人情報の適正な取り扱いと保護に努めます。</p>
+
+        <h3>1. 個人情報の定義</h3>
+        <p>本ポリシーにおいて「個人情報」とは、個人情報の保護に関する法律（以下「個人情報保護法」といいます。）に規定される個人情報を指し、生存する個人に関する情報であって、氏名、生年月日、住所、電話番号、メールアドレス等により特定の個人を識別できるものをいいます。</p>
+
+        <h3>2. 個人情報の収集方法</h3>
+        <p>当社は、お問い合わせフォーム、お取引のお申し込み、その他の手段を通じて、適法かつ公正な方法により個人情報を取得いたします。</p>
+
+        <h3>3. 個人情報の利用目的</h3>
+        <p>当社は、取得した個人情報を以下の目的で利用いたします。</p>
+        <ul>
+          <li>お問い合わせへの回答および対応</li>
+          <li>商品・サービスに関する情報のご提供</li>
+          <li>お取引に関する連絡・通知</li>
+          <li>当社サービスの改善および新サービスの開発</li>
+          <li>その他、上記利用目的に付随する業務</li>
+        </ul>
+
+        <h3>4. 個人情報の第三者提供</h3>
+        <p>当社は、以下の場合を除き、お客様の同意なく個人情報を第三者に提供することはいたしません。</p>
+        <ul>
+          <li>法令に基づく場合</li>
+          <li>人の生命、身体または財産の保護のために必要がある場合であって、お客様の同意を得ることが困難である場合</li>
+          <li>公衆衛生の向上または児童の健全な育成の推進のために特に必要がある場合</li>
+          <li>国の機関もしくは地方公共団体またはその委託を受けた者が法令の定める事務を遂行することに対して協力する必要がある場合</li>
+        </ul>
+
+        <h3>5. 個人情報の安全管理</h3>
+        <p>当社は、個人情報の漏洩、滅失またはき損の防止その他の安全管理のために必要かつ適切な措置を講じます。また、個人情報を取り扱う従業者に対し、必要かつ適切な監督を行います。</p>
+
+        <h3>6. 個人情報の開示・訂正・削除</h3>
+        <p>お客様ご本人から個人情報の開示、訂正、追加、削除、利用停止のご請求があった場合、ご本人であることを確認のうえ、合理的な範囲で速やかに対応いたします。</p>
+
+        <h3>7. Cookie（クッキー）の使用について</h3>
+        <p>当社ウェブサイトでは、お客様の利便性の向上やアクセス状況の分析のためにCookieを使用する場合があります。お客様はブラウザの設定によりCookieの受け取りを拒否することができますが、一部のサービスがご利用いただけなくなる場合があります。</p>
+
+        <h3>8. プライバシーポリシーの変更</h3>
+        <p>当社は、法令の変更等に伴い、本ポリシーを予告なく変更することがあります。変更後のプライバシーポリシーは、当社ウェブサイトに掲載した時点から効力を生じるものとします。</p>
+
+        <h3>9. お問い合わせ窓口</h3>
+        <p>個人情報の取り扱いに関するお問い合わせは、下記までご連絡ください。</p>
+        <p>
+          ワールドスピリッツ株式会社<br>
+          〒890-0005 鹿児島県鹿児島市下伊敷2-29-6<br>
+          TEL: 099-248-9744
+        </p>
+
+        <p style="margin-top:24px;color:#6b7280;font-size:13px;">制定日：2026年3月21日</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Count remaining required fields
+    var form = document.getElementById('contactForm');
+    var countEl = document.getElementById('remainCount');
+    var requiredFields = form.querySelectorAll('[required]');
+    var totalRequired = 0;
+    var counted = {};
+    requiredFields.forEach(function(f) {
+      var name = f.getAttribute('name');
+      if (!counted[name]) {
+        counted[name] = true;
+        totalRequired++;
+      }
+    });
+
+    function updateCount() {
+      var filled = 0;
+      var done = {};
+      requiredFields.forEach(function(f) {
+        var name = f.getAttribute('name');
+        if (done[name]) return;
+        if (f.type === 'checkbox') {
+          var checks = form.querySelectorAll('[name="' + name + '"]');
+          var anyChecked = false;
+          checks.forEach(function(c) { if (c.checked) anyChecked = true; });
+          if (anyChecked) { filled++; done[name] = true; }
+        } else {
+          if (f.value.trim() !== '') { filled++; done[name] = true; }
+        }
+      });
+      countEl.textContent = Math.max(0, totalRequired - filled);
+    }
+
+    form.addEventListener('input', updateCount);
+    form.addEventListener('change', updateCount);
+    updateCount();
+
+    function openPrivacy(e) {
+      e.preventDefault();
+      document.getElementById('privacyModal').classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePrivacy() {
+      document.getElementById('privacyModal').classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    var formData = {};
+
+    function setStep(n) {
+      document.querySelectorAll('.p-contact__step').forEach(function(s, i) {
+        s.classList.remove('is-current');
+        if (i === n) s.classList.add('is-current');
+      });
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      // Collect data
+      formData = {};
+      var inputs = form.querySelectorAll('input, textarea, select');
+      inputs.forEach(function(el) {
+        if (!el.name) return;
+        if (el.type === 'checkbox') {
+          if (el.checked) {
+            if (!formData[el.name]) formData[el.name] = [];
+            formData[el.name].push(el.value);
+          }
+        } else {
+          formData[el.name] = el.value;
+        }
+      });
+
+      // Build confirm view
+      var fields = [
+        { label: '会社名・団体名', key: 'company' },
+        { label: '部署名', key: 'department' },
+        { label: '氏名', key: 'name' },
+        { label: 'フリガナ', key: 'kana' },
+        { label: '電話番号', key: 'tel' },
+        { label: 'メールアドレス', key: 'email' },
+        { label: 'お問い合わせ種別', key: 'type[]' },
+        { label: 'お問い合わせ詳細', key: 'message' }
+      ];
+
+      var rows = '';
+      fields.forEach(function(f) {
+        var val = formData[f.key] || '';
+        if (Array.isArray(val)) val = val.join('、');
+        if (!val) val = '<span style="color:#9ca3af;">未入力</span>';
+        else val = val.replace(/\n/g, '<br>');
+        rows += '<dl class="c-confirm__row">' +
+          '<dt class="c-confirm__label">' + f.label + '</dt>' +
+          '<dd class="c-confirm__value">' + val + '</dd>' +
+          '</dl>';
+      });
+
+      var main = document.querySelector('.p-contact__main');
+      main.innerHTML =
+        '<div class="p-contact__title">' +
+          '<h1 class="p-contact__title-ja">入力内容の確認</h1>' +
+          '<p class="p-contact__title-en">Confirm</p>' +
+        '</div>' +
+        '<p class="p-contact__lead">以下の内容でよろしければ「送信する」ボタンを押してください。</p>' +
+        '<div class="c-confirm">' + rows + '</div>' +
+        '<div class="c-confirm__buttons">' +
+          '<button type="button" class="c-confirm__back" onclick="location.reload()">戻って修正する</button>' +
+          '<button type="button" class="c-form__submit" onclick="handleSend()">' +
+            '送信する <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.5;"><polyline points="9,6 15,12 9,18"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<footer class="c-footer">&copy; World Spirits Co., Ltd.</footer>';
+
+      setStep(1);
+      window.scrollTo(0, 0);
+      return false;
+    }
+
+    function handleSend() {
+      var main = document.querySelector('.p-contact__main');
+      main.innerHTML =
+        '<div style="text-align:center;padding:120px 40px;">' +
+          '<div style="width:72px;height:72px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">' +
+            '<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:none;stroke:#059669;stroke-width:2.5;"><polyline points="20,6 9,17 4,12"/></svg>' +
+          '</div>' +
+          '<h2 style="font-size:28px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">送信が完了しました</h2>' +
+          '<p style="font-size:15px;color:#6b7280;line-height:2;margin-bottom:48px;">' +
+            'お問い合わせいただきありがとうございます。<br>' +
+            '内容を確認の上、担当者よりご連絡させていただきます。' +
+          '</p>' +
+          '<a href="index.html" style="display:inline-block;background:#1a56a8;color:#fff;padding:16px 48px;border-radius:6px;font-weight:700;letter-spacing:0.08em;text-decoration:none;">トップページへ戻る</a>' +
+        '</div>';
+      setStep(2);
+      document.querySelector('.p-contact__count').style.display = 'none';
+      window.scrollTo(0, 0);
+    }
+  </script>
+
+</body>
+</html>
