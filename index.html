@@ -931,20 +931,24 @@
           // Same-page anchor from hamburger menu
           if (href.charAt(0) === '#' && isMenuOpen()) {
             e.preventDefault();
+            var targetHash = href;
             closeMenu();
             overlay.classList.remove('is-fadeout');
             overlay.classList.add('is-active');
-            // Scroll immediately behind the overlay
+            // Scroll immediately behind the overlay using scrollTo for reliability
             setTimeout(function() {
-              var target = document.querySelector(href);
-              if (target) target.scrollIntoView({ behavior: 'auto' });
-            }, 300);
+              var target = document.querySelector(targetHash);
+              if (target) {
+                var y = target.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo(0, y);
+              }
+            }, 400);
             // After eagle animation, fade out overlay to reveal destination
             setTimeout(function() {
               overlay.classList.add('is-fadeout');
               setTimeout(function() {
                 overlay.classList.remove('is-active', 'is-fadeout');
-              }, 500);
+              }, 900);
             }, 1200);
           }
         });
