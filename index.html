@@ -932,12 +932,20 @@
           if (href.charAt(0) === '#' && isMenuOpen()) {
             e.preventDefault();
             closeMenu();
+            overlay.classList.remove('is-fadeout');
             overlay.classList.add('is-active');
+            // Scroll immediately behind the overlay
             setTimeout(function() {
-              overlay.classList.remove('is-active');
               var target = document.querySelector(href);
               if (target) target.scrollIntoView({ behavior: 'auto' });
-            }, 1100);
+            }, 300);
+            // After eagle animation, fade out overlay to reveal destination
+            setTimeout(function() {
+              overlay.classList.add('is-fadeout');
+              setTimeout(function() {
+                overlay.classList.remove('is-active', 'is-fadeout');
+              }, 500);
+            }, 1200);
           }
         });
       });

@@ -1910,12 +1910,18 @@ body.is-loaded .p-home-first__scroll {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
 .c-transition.is-active {
   opacity: 1;
   visibility: visible;
   pointer-events: all;
+}
+
+.c-transition.is-fadeout {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .c-transition__eagle {
