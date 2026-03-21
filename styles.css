@@ -1910,7 +1910,7 @@ body.is-loaded .p-home-first__scroll {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.9s ease, visibility 0.9s ease;
+  transition: none;
 }
 
 .c-transition.is-active {
@@ -1920,6 +1920,7 @@ body.is-loaded .p-home-first__scroll {
 }
 
 .c-transition.is-fadeout {
+  transition: opacity 0.9s ease, visibility 0.9s ease;
   opacity: 0;
   pointer-events: none;
 }
