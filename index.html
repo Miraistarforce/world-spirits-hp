@@ -560,10 +560,13 @@
         blue.classList.add('is-active');
         loading.classList.add('is-blue');
       }, blueDelay);
-      // Hide loading and start page animations
+      // Fade out loading and start page animations
       setTimeout(function() {
         loading.classList.add('is-done');
         document.body.classList.add('is-loaded');
+        setTimeout(function() {
+          loading.classList.add('is-hidden');
+        }, 900);
       }, blueDelay + 800);
     })();
 

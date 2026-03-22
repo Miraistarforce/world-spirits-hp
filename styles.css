@@ -1827,6 +1827,11 @@ body.is-loaded .p-home-first__scroll {
 
 .c-loading.is-done {
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.c-loading.is-hidden {
   visibility: hidden;
 }
 
