@@ -1439,6 +1439,7 @@ body.is-loaded .p-home-first__scroll {
 
 .p-sales__th-amount {
   text-align: right !important;
+  font-size: 14px;
 }
 
 .p-sales__table tbody tr {
@@ -1464,9 +1465,10 @@ body.is-loaded .p-home-first__scroll {
 .p-sales__td-amount {
   text-align: right;
   font-family: var(--font-en);
-  font-weight: 600;
+  font-size: clamp(17px, 1.6vw, 20px);
+  font-weight: 700;
   color: var(--color-blue);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
 }
 
 /* ========================================
