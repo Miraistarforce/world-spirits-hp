@@ -6,9 +6,12 @@
   'use strict';
 
   var CONFIG = window.SITE_CONFIG;
-  if (!CONFIG || CONFIG.SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+  if (!CONFIG) return;
 
-  var sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+  var IS_TEST = CONFIG.TEST_MODE === true;
+  var sb = (!IS_TEST && CONFIG.SUPABASE_URL !== 'YOUR_SUPABASE_URL')
+    ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY)
+    : null;
 
   // メニューのhrefとセクションIDのマッピング
   var MENU_MAP = {
@@ -22,11 +25,21 @@
 
   async function loadContent() {
     try {
-      var { data, error } = await sb.from('site_content').select('*');
-      if (error || !data || data.length === 0) return;
-
       var content = {};
-      data.forEach(function(row) { content[row.section_id] = row.content; });
+
+      if (IS_TEST) {
+        // テストモード: ローカルストレージから読み込み
+        var stored = {};
+        try { stored = JSON.parse(localStorage.getItem('ws_admin_content') || '{}'); } catch(e) {}
+        Object.keys(stored).forEach(function(key) { content[key] = stored[key].content; });
+        if (Object.keys(content).length === 0) return;
+      } else if (sb) {
+        var { data, error } = await sb.from('site_content').select('*');
+        if (error || !data || data.length === 0) return;
+        data.forEach(function(row) { content[row.section_id] = row.content; });
+      } else {
+        return;
+      }
 
       if (content.message) applyMessage(content.message);
       if (content.about) applyAbout(content.about);

@@ -174,12 +174,25 @@
   <script src="site-config.js"></script>
   <script>
     // ==========================================
-    // Supabase Client
+    // Config & Client
     // ==========================================
-    const sb = supabase.createClient(
+    const IS_TEST = window.SITE_CONFIG.TEST_MODE === true;
+    const sb = IS_TEST ? null : supabase.createClient(
       window.SITE_CONFIG.SUPABASE_URL,
       window.SITE_CONFIG.SUPABASE_KEY
     );
+
+    // テストモード用ローカルストレージ操作
+    const testStorage = {
+      getAll: function() {
+        try { return JSON.parse(localStorage.getItem('ws_admin_content') || '{}'); } catch(e) { return {}; }
+      },
+      save: function(sectionId, content) {
+        var all = this.getAll();
+        all[sectionId] = { section_id: sectionId, content: content, updated_at: new Date().toISOString() };
+        localStorage.setItem('ws_admin_content', JSON.stringify(all));
+      }
+    };
 
     // ==========================================
     // Section Definitions
@@ -337,6 +350,19 @@
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
 
+      if (IS_TEST) {
+        if (email === window.SITE_CONFIG.TEST_EMAIL && password === window.SITE_CONFIG.TEST_PASSWORD) {
+          sessionStorage.setItem('ws_admin_logged_in', '1');
+          sessionStorage.setItem('ws_admin_email', email);
+          showDashboard(email);
+        } else {
+          errEl.textContent = 'メールアドレスまたはパスワードが正しくありません';
+          errEl.style.display = 'block';
+          btn.disabled = false;
+        }
+        return;
+      }
+
       const { error } = await sb.auth.signInWithPassword({ email, password });
       if (error) {
         errEl.textContent = 'メールアドレスまたはパスワードが正しくありません';
@@ -348,24 +374,39 @@
     }
 
     async function handleLogout() {
-      await sb.auth.signOut();
+      if (IS_TEST) {
+        sessionStorage.removeItem('ws_admin_logged_in');
+        sessionStorage.removeItem('ws_admin_email');
+      } else {
+        await sb.auth.signOut();
+      }
       document.getElementById('loginScreen').style.display = 'flex';
       document.getElementById('dashboard').classList.remove('is-active');
     }
 
     async function checkSession() {
+      if (IS_TEST) {
+        if (sessionStorage.getItem('ws_admin_logged_in') === '1') {
+          showDashboard(sessionStorage.getItem('ws_admin_email'));
+        }
+        return;
+      }
       const { data: { session } } = await sb.auth.getSession();
       if (session) {
         showDashboard();
       }
     }
 
-    function showDashboard() {
+    function showDashboard(email) {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').classList.add('is-active');
-      sb.auth.getUser().then(({ data: { user } }) => {
-        if (user) document.getElementById('userEmail').textContent = user.email;
-      });
+      if (IS_TEST) {
+        document.getElementById('userEmail').textContent = email || 'テストユーザー';
+      } else {
+        sb.auth.getUser().then(({ data: { user } }) => {
+          if (user) document.getElementById('userEmail').textContent = user.email;
+        });
+      }
       initDashboard();
     }
 
@@ -417,6 +458,13 @@
     // Content Load / Save
     // ==========================================
     async function loadAllContent() {
+      if (IS_TEST) {
+        var stored = testStorage.getAll();
+        Object.keys(stored).forEach(function(key) {
+          allContent[key] = stored[key].content;
+        });
+        return;
+      }
       try {
         const { data, error } = await sb.from('site_content').select('*');
         if (error) throw error;
@@ -438,16 +486,20 @@
 
       try {
         const content = collectContent(sectionId);
-        const { data: { user } } = await sb.auth.getUser();
 
-        const { error } = await sb.from('site_content').upsert({
-          section_id: sectionId,
-          content: content,
-          updated_at: new Date().toISOString(),
-          updated_by: user ? user.id : null
-        });
+        if (IS_TEST) {
+          testStorage.save(sectionId, content);
+        } else {
+          const { data: { user } } = await sb.auth.getUser();
+          const { error } = await sb.from('site_content').upsert({
+            section_id: sectionId,
+            content: content,
+            updated_at: new Date().toISOString(),
+            updated_by: user ? user.id : null
+          });
+          if (error) throw error;
+        }
 
-        if (error) throw error;
         allContent[sectionId] = content;
         showToast('保存しました', 'success');
       } catch (e) {
@@ -462,6 +514,10 @@
     // Image Upload
     // ==========================================
     async function uploadImage(file) {
+      if (IS_TEST) {
+        // テストモード: ローカルのObjectURLを返す（ブラウザ内のみ有効）
+        return URL.createObjectURL(file);
+      }
       const ext = file.name.split('.').pop();
       const path = 'uploads/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.' + ext;
 
