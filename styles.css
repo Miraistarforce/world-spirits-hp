@@ -1284,6 +1284,100 @@ body.is-loaded .p-home-first__scroll {
 }
 
 /* ========================================
+   Sales Record / 売上実績
+   ======================================== */
+.p-sales {
+  background: var(--color-offwhite);
+  padding: 100px 0 120px;
+  overflow: hidden;
+}
+
+.p-sales__inner {
+  max-width: var(--container-l);
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+.p-sales__header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.p-sales__title {
+  font-family: var(--font-en);
+  font-size: clamp(56px, 8vw, 100px);
+  font-weight: 700;
+  color: var(--color-blue);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.p-sales__subtitle {
+  display: block;
+  font-size: clamp(14px, 1.5vw, 18px);
+  color: var(--color-text-light);
+  letter-spacing: 0.08em;
+  margin-top: 12px;
+}
+
+.p-sales__table-wrap {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.p-sales__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.p-sales__table thead {
+  background: var(--color-blue);
+}
+
+.p-sales__table th {
+  padding: 16px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  text-align: left;
+  letter-spacing: 0.04em;
+}
+
+.p-sales__th-amount {
+  text-align: right !important;
+}
+
+.p-sales__table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.2s;
+}
+
+.p-sales__table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.p-sales__table tbody tr:hover {
+  background: rgba(0, 74, 153, 0.03);
+}
+
+.p-sales__table td {
+  padding: 14px 24px;
+  font-size: 15px;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.p-sales__td-amount {
+  text-align: right;
+  font-family: var(--font-en);
+  font-weight: 600;
+  color: var(--color-blue);
+  letter-spacing: 0.02em;
+}
+
+/* ========================================
    Works/Gallery - box1 "Works" grid style
    ======================================== */
 .p-works {
@@ -2117,6 +2211,15 @@ body.is-loaded .p-home-first__scroll {
     --cube-size: min(320px, 50vw);
   }
 
+  /* Sales Record */
+  .p-sales {
+    padding: 80px 0 100px;
+  }
+
+  .p-sales__inner {
+    padding: 0 32px;
+  }
+
   /* Works */
   .p-works__carousel {
     height: 360px;
@@ -2414,6 +2517,29 @@ body.is-loaded .p-home-first__scroll {
     grid-row: auto;
     grid-column: auto;
     margin-top: 8px;
+  }
+
+  /* Sales Record */
+  .p-sales {
+    padding: 60px 0 80px;
+  }
+
+  .p-sales__inner {
+    padding: 0 16px;
+  }
+
+  .p-sales__header {
+    margin-bottom: 32px;
+  }
+
+  .p-sales__table th {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .p-sales__table td {
+    padding: 10px 14px;
+    font-size: 13px;
   }
 
   /* Works */
