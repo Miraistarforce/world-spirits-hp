@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理画面 - World Spirits</title>
+  <link rel="icon" type="image/png" href="images/spirits-logo.png">
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', sans-serif; background: #f3f4f6; color: #1a1a2e; line-height: 1.6; }
+    input, textarea, select, button { font-family: inherit; }
+
+    /* ===== Login ===== */
+    .login { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #004a99, #003060); }
+    .login__card { background: #fff; padding: 48px 40px; border-radius: 16px; width: 420px; max-width: 92%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .login__logo { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; color: #004a99; margin-bottom: 8px; }
+    .login__title { font-size: 26px; font-weight: 700; margin-bottom: 32px; color: #1a1a2e; }
+    .login__group { margin-bottom: 18px; }
+    .login__label { display: block; font-size: 13px; font-weight: 600; color: #666; margin-bottom: 6px; }
+    .login__input { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; transition: border-color 0.2s; outline: none; }
+    .login__input:focus { border-color: #004a99; box-shadow: 0 0 0 3px rgba(0,74,153,0.1); }
+    .login__btn { width: 100%; padding: 14px; background: #004a99; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+    .login__btn:hover { background: #003d7a; }
+    .login__btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .login__error { color: #dc3545; font-size: 13px; margin-top: 12px; display: none; }
+
+    /* ===== Dashboard ===== */
+    .dashboard { display: none; }
+    .dashboard.is-active { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar { background: #fff; border-right: 1px solid #e5e7eb; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+    .sidebar__header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+    .sidebar__logo { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #004a99; }
+    .sidebar__title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-top: 2px; }
+    .sidebar__nav { padding: 12px 0; flex: 1; }
+    .sidebar__link { display: flex; align-items: center; gap: 12px; padding: 11px 24px; color: #666; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; font-size: 14px; font-weight: 500; }
+    .sidebar__link:hover { background: #f0f4ff; color: #004a99; }
+    .sidebar__link.is-active { background: #e8f0fe; color: #004a99; border-left-color: #004a99; font-weight: 600; }
+    .sidebar__link-icon { width: 20px; text-align: center; font-size: 16px; }
+    .sidebar__footer { padding: 16px 24px; border-top: 1px solid #e5e7eb; }
+    .sidebar__logout { width: 100%; padding: 10px; background: none; border: 1px solid #ddd; border-radius: 6px; color: #666; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .sidebar__logout:hover { background: #fff0f0; border-color: #dc3545; color: #dc3545; }
+    .sidebar__user { font-size: 12px; color: #999; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Main */
+    .main { padding: 32px 40px; overflow-y: auto; min-height: 100vh; }
+    .main__header { margin-bottom: 28px; }
+    .main__title { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+    .main__desc { font-size: 13px; color: #888; margin-top: 4px; }
+
+    /* Panels */
+    .panel { display: none; }
+    .panel.is-active { display: block; }
+
+    /* Cards */
+    .card { background: #fff; border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .card__title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e8f0fe; }
+
+    /* Form */
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
+    .form-hint { font-size: 11px; color: #999; margin-top: 4px; display: block; }
+    .form-input { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 15px; outline: none; transition: border-color 0.2s; }
+    .form-input:focus { border-color: #004a99; box-shadow: 0 0 0 3px rgba(0,74,153,0.08); }
+    .form-textarea { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 15px; min-height: 120px; resize: vertical; outline: none; transition: border-color 0.2s; font-family: inherit; line-height: 1.8; }
+    .form-textarea:focus { border-color: #004a99; box-shadow: 0 0 0 3px rgba(0,74,153,0.08); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-row-3 { display: grid; grid-template-columns: 100px 1fr 200px; gap: 12px; align-items: end; }
+
+    /* Quill */
+    .ql-container { font-size: 15px; font-family: inherit; }
+    .ql-editor { min-height: 120px; line-height: 1.8; }
+    .ql-toolbar.ql-snow { border-radius: 6px 6px 0 0; border-color: #d1d5db; }
+    .ql-container.ql-snow { border-radius: 0 0 6px 6px; border-color: #d1d5db; }
+
+    /* Dynamic items */
+    .item-group { border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 12px; background: #fafbfc; position: relative; }
+    .item-group__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .item-group__title { font-size: 14px; font-weight: 600; color: #004a99; }
+    .item-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+    .item-row .form-input { flex: 1; }
+
+    /* Image upload */
+    .img-upload { display: flex; align-items: center; gap: 16px; }
+    .img-upload__preview { width: 120px; height: 80px; border-radius: 6px; object-fit: cover; border: 1px solid #ddd; background: #f5f5f5; }
+    .img-upload__btn { padding: 8px 16px; background: #e8f0fe; color: #004a99; border: 1px dashed #004a99; border-radius: 6px; font-size: 13px; cursor: pointer; }
+    .img-upload__btn:hover { background: #d0e0ff; }
+    .img-upload input[type="file"] { display: none; }
+
+    /* Buttons */
+    .btn-save { display: inline-flex; align-items: center; gap: 8px; padding: 12px 36px; background: #004a99; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+    .btn-save:hover { background: #003d7a; }
+    .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-add { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #fff; color: #004a99; border: 1px solid #004a99; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .btn-add:hover { background: #e8f0fe; }
+    .btn-remove { padding: 6px 10px; background: #fff; color: #dc3545; border: 1px solid #dc3545; border-radius: 4px; font-size: 12px; cursor: pointer; flex-shrink: 0; }
+    .btn-remove:hover { background: #fff0f0; }
+    .btn-group { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
+
+    /* Toast */
+    .toast { position: fixed; top: 24px; right: 24px; padding: 14px 24px; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 500; z-index: 9999; transform: translateX(120%); transition: transform 0.3s ease; }
+    .toast.is-show { transform: translateX(0); }
+    .toast--success { background: #10b981; }
+    .toast--error { background: #ef4444; }
+
+    /* Loading */
+    .saving-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9998; align-items: center; justify-content: center; }
+    .saving-overlay.is-show { display: flex; }
+    .saving-spinner { width: 40px; height: 40px; border: 3px solid #fff; border-top-color: #004a99; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .dashboard.is-active { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Login ===== -->
+  <div class="login" id="loginScreen">
+    <div class="login__card">
+      <p class="login__logo">WORLD SPIRITS</p>
+      <h1 class="login__title">管理画面ログイン</h1>
+      <form id="loginForm">
+        <div class="login__group">
+          <label class="login__label">メールアドレス</label>
+          <input type="email" class="login__input" id="loginEmail" required placeholder="admin@example.com">
+        </div>
+        <div class="login__group">
+          <label class="login__label">パスワード</label>
+          <input type="password" class="login__input" id="loginPassword" required placeholder="パスワード">
+        </div>
+        <button type="submit" class="login__btn" id="loginBtn">ログイン</button>
+        <p class="login__error" id="loginError"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Dashboard ===== -->
+  <div class="dashboard" id="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar__header">
+        <p class="sidebar__logo">WORLD SPIRITS</p>
+        <p class="sidebar__title">管理画面</p>
+      </div>
+      <nav class="sidebar__nav" id="sidebarNav"></nav>
+      <div class="sidebar__footer">
+        <p class="sidebar__user" id="userEmail"></p>
+        <button class="sidebar__logout" id="logoutBtn">ログアウト</button>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="main__header" id="mainHeader">
+        <h2 class="main__title" id="mainTitle"></h2>
+        <p class="main__desc" id="mainDesc"></p>
+      </div>
+      <div id="panelContainer"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+  <!-- Saving overlay -->
+  <div class="saving-overlay" id="savingOverlay"><div class="saving-spinner"></div></div>
+
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="site-config.js"></script>
+  <script>
+    // ==========================================
+    // Supabase Client
+    // ==========================================
+    const sb = supabase.createClient(
+      window.SITE_CONFIG.SUPABASE_URL,
+      window.SITE_CONFIG.SUPABASE_KEY
+    );
+
+    // ==========================================
+    // Section Definitions
+    // ==========================================
+    const SECTIONS = [
+      { id: 'message', label: 'Message & Vision', desc: 'メッセージ文、Our Visionテキスト、ビジョンカード' },
+      { id: 'about', label: 'About', desc: 'タイトル、サブタイトル、リード文、本文', menuHref: '#about' },
+      { id: 'service', label: 'Products', desc: '商品の強み 3つのアイテム', menuHref: '#service' },
+      { id: 'sales', label: 'Sales Record', desc: '売上実績データ', menuHref: '#sales' },
+      { id: 'works', label: 'Works', desc: '店舗・商品紹介スライド', menuHref: '#works' },
+      { id: 'clients', label: 'Clients', desc: '主要お取引先一覧', menuHref: '#clients' },
+      { id: 'company', label: 'Company', desc: '会社概要テーブル', menuHref: '#company' },
+    ];
+
+    // Quill instances storage
+    const quillInstances = {};
+    // Current content from Supabase
+    let allContent = {};
+    // Current active section
+    let activeSection = 'message';
+
+    // ==========================================
+    // Default Content (matches current site HTML)
+    // ==========================================
+    const DEFAULTS = {
+      message: {
+        lines: [
+          'たとえば、100のお客様がいれば、',
+          '私たちは、「100通り」の提案をする。',
+          'ニーズを満たし、期待をかなえ、',
+          '創業以来の経験と目利き力を注ぎ込む。',
+          'それが、私達のサービスです。'
+        ],
+        visionText: 'Our Vision',
+        countLabel: 'World Spiritsの',
+        countNumber: '3',
+        countText: 'つのビジョン',
+        items: [
+          { num: '01', en: 'Lineup', ja: '豊富な品揃え', title: '幅広い商品を全国へ届ける', image: 'images/IMG_1952.JPG' },
+          { num: '02', en: 'Quality', ja: '確かな品質', title: '厳選された品質へのこだわり', image: 'images/IMG_1942.JPG' },
+          { num: '03', en: 'Network', ja: '全国展開', title: 'お客様の唯一のスタイルを作る', image: 'images/IMG_2046.JPG' }
+        ]
+      },
+      about: {
+        title: 'About us',
+        subtitle: 'World Spiritsについて',
+        menuTitle: 'About',
+        lead: 'ワールドスピリッツ株式会社は、鹿児島を拠点に、全国の大手量販店・百貨店にてファッション雑貨・ジュエリーの販売を展開しています。',
+        text: 'ハンドバッグ、アクセサリー、財布、宝石・真珠など幅広い商品を取り揃え、確かな品質と真心のこもったサービスで、多くのお客様にご愛顧いただいております。<br>お客様のニーズと目的にお答えする様々なコミュニケーションスペースを創造いたします。'
+      },
+      service: {
+        title: 'Products',
+        subtitle: '商品の強み',
+        menuTitle: 'Products',
+        items: [
+          { titleJa: '目 利 き', titleEn: 'Curating', text: '創業以来培った審美眼で、国内外から本当に価値ある逸品だけを厳選。トレンドを先読みしながらも、長く愛される普遍的な美しさを見極めます。' },
+          { titleJa: '信 頼', titleEn: 'Trust', text: '私達は、「ありがとう」の連鎖の中に居続けます。一つひとつの商品に責任を持ち、お客様との対話を通じて最適な一品をご提案いたします。' },
+          { titleJa: '接 点', titleEn: 'Reach', text: '全国の百貨店・大型量販店に展開し、お客様の日常の中に上質な出会いをお届け。どこにいても、私達の選び抜いた商品に触れていただけます。' }
+        ]
+      },
+      sales: {
+        title: 'Sales Record',
+        subtitle: '売上実績',
+        menuTitle: 'Sales Record',
+        years: [
+          { year: '2026', quarters: [
+            { label: '1月〜3月', rows: [
+              { month: '2月', store: 'ダイエー上溝', amount: '8,763,000円' },
+              { month: '2月', store: 'イオン土浦港', amount: '7,038,000円' },
+              { month: '1月', store: 'イオンモール鳥取北', amount: '3,291,000円' },
+              { month: '1月', store: '心斎橋オーパ', amount: '2,562,000円' },
+            ]}
+          ]},
+          { year: '2025', quarters: [
+            { label: '10月〜12月', rows: [
+              { month: '12月', store: 'イオンモール鳥取北', amount: '5,436,000円' },
+              { month: '12月', store: 'ダイエー十日市場', amount: '2,048,000円' },
+              { month: '11月', store: 'ゆめタウン徳島', amount: '5,370,000円' },
+              { month: '11月', store: 'イオン高砂', amount: '3,356,000円' },
+              { month: '10月', store: 'イオンモール鹿児島', amount: '4,375,000円' },
+              { month: '10月', store: 'ダイエー塚口', amount: '3,914,000円' },
+            ]},
+            { label: '7月〜9月', rows: [
+              { month: '9月', store: 'ゆめタウン久留米', amount: '10,272,000円' },
+              { month: '9月', store: 'イオンモール船橋', amount: '3,624,000円' },
+              { month: '8月', store: 'ダイエー曽根', amount: '9,115,000円' },
+              { month: '8月', store: 'イオンモール船橋', amount: '4,093,000円' },
+              { month: '7月', store: 'ゆめタウン広島', amount: '6,379,000円' },
+              { month: '7月', store: 'イオンモール船橋', amount: '3,697,000円' },
+            ]},
+            { label: '4月〜6月', rows: [
+              { month: '6月', store: 'ゆめタウン久留米', amount: '8,867,000円' },
+              { month: '6月', store: 'イオンモール土浦', amount: '3,017,000円' },
+              { month: '5月', store: 'イオンモール常滑', amount: '5,500,000円' },
+              { month: '5月', store: 'ゆめタウン常滑', amount: '4,532,000円' },
+              { month: '4月', store: 'イオン浜松市野', amount: '4,725,000円' },
+              { month: '4月', store: 'イオンモール常滑', amount: '3,862,000円' },
+            ]},
+            { label: '1月〜3月', rows: [
+              { month: '3月', store: 'ダイエー西宮', amount: '6,036,000円' },
+              { month: '3月', store: 'IY龍ヶ崎', amount: '4,640,000円' },
+              { month: '2月', store: 'ダイエーおおとり', amount: '8,591,000円' },
+              { month: '2月', store: 'IY龍ヶ崎', amount: '5,006,000円' },
+              { month: '1月', store: 'イオン小野', amount: '7,110,000円' },
+              { month: '1月', store: 'IY石巻', amount: '7,036,000円' },
+            ]}
+          ]}
+        ]
+      },
+      works: {
+        title: 'Works',
+        subtitle: '店舗・商品紹介',
+        menuTitle: 'Works',
+        slides: [
+          { location: 'イオンモール鹿児島', company: 'イオンリテール株式会社', product: '#ハンドバッグ・財布・ファッション雑貨', image: 'images/IMG_1941.JPG' },
+          { location: 'ゆめタウン博多', company: '株式会社イズミ', product: '#バッグ・レザーグッズ', image: 'images/IMG_1948.JPG' },
+          { location: '山形屋百貨店', company: '株式会社山形屋', product: '#パール・ジュエリー', image: 'images/IMG_2050.JPG' },
+          { location: 'イトーヨーカドー大宮店', company: '株式会社イトーヨーカ堂', product: '#アクセサリー・シルバー', image: 'images/IMG_2830.JPG' },
+          { location: 'イオンモール熊本', company: 'イオン九州株式会社', product: '#催事・ファッション雑貨', image: 'images/IMG_2757.JPG' },
+          { location: '天文館ベルク', company: '株式会社平和堂', product: '#宝石・貴金属・真珠', image: 'images/IMG_2829.JPG' }
+        ]
+      },
+      clients: {
+        title: 'Clients',
+        subtitle: '主要お取引先',
+        menuTitle: 'Clients',
+        items: ['イオン株式会社', 'イオンリテール株式会社', 'イトーヨーカドー', 'ゆめタウン', '平和堂', 'イズミヤ', 'ユニー', 'ドンキホーテ'],
+        note: 'ほか主要百貨店など'
+      },
+      company: {
+        title: 'Company',
+        subtitle: '会社概要',
+        menuTitle: 'Company',
+        rows: [
+          { label: '会社名', value: 'ワールドスピリッツ株式会社' },
+          { label: '所在地', value: '〒890-0005 鹿児島県鹿児島市下伊敷2-29-6' },
+          { label: 'TEL / FAX', value: '099-248-9744' },
+          { label: '代表取締役', value: '堀 巌' },
+          { label: '設立', value: '平成20年5月' },
+          { label: '事業内容', value: 'ファッション雑貨・ジュエリー等の企画・販売' }
+        ]
+      }
+    };
+
+    // ==========================================
+    // Auth
+    // ==========================================
+    async function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const errEl = document.getElementById('loginError');
+      btn.disabled = true;
+      errEl.style.display = 'none';
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) {
+        errEl.textContent = 'メールアドレスまたはパスワードが正しくありません';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        return;
+      }
+      showDashboard();
+    }
+
+    async function handleLogout() {
+      await sb.auth.signOut();
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('dashboard').classList.remove('is-active');
+    }
+
+    async function checkSession() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        showDashboard();
+      }
+    }
+
+    function showDashboard() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').classList.add('is-active');
+      sb.auth.getUser().then(({ data: { user } }) => {
+        if (user) document.getElementById('userEmail').textContent = user.email;
+      });
+      initDashboard();
+    }
+
+    // ==========================================
+    // Dashboard Init
+    // ==========================================
+    let dashboardInitialized = false;
+
+    async function initDashboard() {
+      if (dashboardInitialized) return;
+      dashboardInitialized = true;
+
+      // Build sidebar
+      const nav = document.getElementById('sidebarNav');
+      SECTIONS.forEach((sec, i) => {
+        const link = document.createElement('div');
+        link.className = 'sidebar__link' + (i === 0 ? ' is-active' : '');
+        link.dataset.section = sec.id;
+        link.innerHTML = '<span class="sidebar__link-icon">' + getSectionIcon(sec.id) + '</span>' + sec.label;
+        link.onclick = () => switchSection(sec.id);
+        nav.appendChild(link);
+      });
+
+      // Build panels
+      const container = document.getElementById('panelContainer');
+      SECTIONS.forEach(sec => {
+        const panel = document.createElement('div');
+        panel.className = 'panel' + (sec.id === 'message' ? ' is-active' : '');
+        panel.id = 'panel-' + sec.id;
+        container.appendChild(panel);
+      });
+
+      // Load content from Supabase
+      await loadAllContent();
+
+      // Render all panels
+      SECTIONS.forEach(sec => renderPanel(sec.id));
+
+      // Set initial header
+      updateHeader('message');
+    }
+
+    function getSectionIcon(id) {
+      const icons = { message: '&#9993;', about: '&#9998;', service: '&#9733;', sales: '&#9776;', works: '&#9783;', clients: '&#9734;', company: '&#9962;' };
+      return icons[id] || '&#9679;';
+    }
+
+    // ==========================================
+    // Content Load / Save
+    // ==========================================
+    async function loadAllContent() {
+      try {
+        const { data, error } = await sb.from('site_content').select('*');
+        if (error) throw error;
+        if (data) {
+          data.forEach(row => { allContent[row.section_id] = row.content; });
+        }
+      } catch (e) {
+        console.warn('Supabaseからの読み込みに失敗:', e.message);
+      }
+    }
+
+    function getContent(sectionId) {
+      return allContent[sectionId] || DEFAULTS[sectionId] || {};
+    }
+
+    async function saveSection(sectionId) {
+      const overlay = document.getElementById('savingOverlay');
+      overlay.classList.add('is-show');
+
+      try {
+        const content = collectContent(sectionId);
+        const { data: { user } } = await sb.auth.getUser();
+
+        const { error } = await sb.from('site_content').upsert({
+          section_id: sectionId,
+          content: content,
+          updated_at: new Date().toISOString(),
+          updated_by: user ? user.id : null
+        });
+
+        if (error) throw error;
+        allContent[sectionId] = content;
+        showToast('保存しました', 'success');
+      } catch (e) {
+        console.error(e);
+        showToast('保存に失敗しました: ' + e.message, 'error');
+      } finally {
+        overlay.classList.remove('is-show');
+      }
+    }
+
+    // ==========================================
+    // Image Upload
+    // ==========================================
+    async function uploadImage(file) {
+      const ext = file.name.split('.').pop();
+      const path = 'uploads/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+
+      const { error } = await sb.storage.from('site-images').upload(path, file);
+      if (error) throw error;
+
+      const { data } = sb.storage.from('site-images').getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    function setupImageUpload(container, currentSrc, onUpload) {
+      const html = '<div class="img-upload">' +
+        '<img class="img-upload__preview" src="' + (currentSrc || '') + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;120&quot; height=&quot;80&quot;><rect fill=&quot;%23f0f0f0&quot; width=&quot;120&quot; height=&quot;80&quot;/><text x=&quot;50%&quot; y=&quot;50%&quot; text-anchor=&quot;middle&quot; dy=&quot;.3em&quot; fill=&quot;%23999&quot; font-size=&quot;12&quot;>No Image</text></svg>\'">' +
+        '<label class="img-upload__btn">画像を選択<input type="file" accept="image/*"></label>' +
+        '</div>';
+      container.innerHTML = html;
+
+      const input = container.querySelector('input[type="file"]');
+      const preview = container.querySelector('.img-upload__preview');
+      input.addEventListener('change', async function() {
+        if (!this.files[0]) return;
+        preview.style.opacity = '0.5';
+        try {
+          const url = await uploadImage(this.files[0]);
+          preview.src = url;
+          preview.style.opacity = '1';
+          if (onUpload) onUpload(url);
+          showToast('画像をアップロードしました', 'success');
+        } catch (e) {
+          preview.style.opacity = '1';
+          showToast('アップロード失敗: ' + e.message, 'error');
+        }
+      });
+    }
+
+    // ==========================================
+    // Panel Renderers
+    // ==========================================
+    function renderPanel(sectionId) {
+      const panel = document.getElementById('panel-' + sectionId);
+      const content = getContent(sectionId);
+
+      switch (sectionId) {
+        case 'message': renderMessage(panel, content); break;
+        case 'about': renderAbout(panel, content); break;
+        case 'service': renderService(panel, content); break;
+        case 'sales': renderSales(panel, content); break;
+        case 'works': renderWorks(panel, content); break;
+        case 'clients': renderClients(panel, content); break;
+        case 'company': renderCompany(panel, content); break;
+      }
+    }
+
+    // ----- Message & Vision -----
+    function renderMessage(panel, c) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">メッセージ文</h3>
+          <div class="form-group">
+            <label class="form-label">メッセージ（1行ずつ改行で区切ってください）</label>
+            <textarea class="form-textarea" id="msg-lines" rows="6">${(c.lines || []).join('\n')}</textarea>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card__title">Our Vision</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Visionテキスト</label>
+              <input class="form-input" id="msg-visionText" value="${esc(c.visionText || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">背景テキスト</label>
+              <input class="form-input" id="msg-bgText" value="${esc(c.bgText || c.visionText || '')}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">カウントラベル</label>
+            <input class="form-input" id="msg-countLabel" value="${esc(c.countLabel || '')}">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">カウント数字</label>
+              <input class="form-input" id="msg-countNumber" value="${esc(c.countNumber || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">カウントテキスト</label>
+              <input class="form-input" id="msg-countText" value="${esc(c.countText || '')}">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card__title">ビジョンカード（3つ）</h3>
+          <div id="msg-items"></div>
+        </div>
+        <button class="btn-save" onclick="saveSection('message')">保存する</button>
+      `;
+
+      // Render vision items
+      const itemsContainer = document.getElementById('msg-items');
+      (c.items || []).forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'item-group';
+        div.innerHTML = `
+          <div class="item-group__header"><span class="item-group__title">カード ${i + 1}</span></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">番号</label>
+              <input class="form-input msg-item-num" value="${esc(item.num || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">英語タイトル</label>
+              <input class="form-input msg-item-en" value="${esc(item.en || '')}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">日本語タイトル</label>
+              <input class="form-input msg-item-ja" value="${esc(item.ja || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">説明タイトル</label>
+              <input class="form-input msg-item-title" value="${esc(item.title || '')}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">画像</label>
+            <div class="msg-item-img" data-idx="${i}"></div>
+          </div>
+        `;
+        itemsContainer.appendChild(div);
+
+        // Image upload
+        const imgContainer = div.querySelector('.msg-item-img');
+        setupImageUpload(imgContainer, item.image, (url) => {
+          // URL will be collected on save
+        });
+      });
+    }
+
+    // ----- About -----
+    function renderAbout(panel, c) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">基本設定</h3>
+          <div class="form-group">
+            <label class="form-label">メニュー表示名</label>
+            <input class="form-input" id="about-menuTitle" value="${esc(c.menuTitle || '')}">
+            <small class="form-hint">ヘッダーメニューとフッターに表示される名前です</small>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">タイトル（英語）</label>
+              <input class="form-input" id="about-title" value="${esc(c.title || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">サブタイトル（日本語）</label>
+              <input class="form-input" id="about-subtitle" value="${esc(c.subtitle || '')}">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card__title">コンテンツ</h3>
+          <div class="form-group">
+            <label class="form-label">リード文</label>
+            <div id="about-lead-editor"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">本文</label>
+            <div id="about-text-editor"></div>
+          </div>
+        </div>
+        <button class="btn-save" onclick="saveSection('about')">保存する</button>
+      `;
+
+      quillInstances['about-lead'] = new Quill('#about-lead-editor', { theme: 'snow', placeholder: 'リード文を入力...', modules: { toolbar: [['bold', 'italic'], ['clean']] } });
+      quillInstances['about-lead'].root.innerHTML = c.lead || '';
+
+      quillInstances['about-text'] = new Quill('#about-text-editor', { theme: 'snow', placeholder: '本文を入力...', modules: { toolbar: [['bold', 'italic'], [{ list: 'ordered' }, { list: 'bullet' }], ['link'], ['clean']] } });
+      quillInstances['about-text'].root.innerHTML = c.text || '';
+    }
+
+    // ----- Service (Products) -----
+    function renderService(panel, c) {
+      let itemsHtml = '';
+      (c.items || []).forEach((item, i) => {
+        itemsHtml += `
+          <div class="item-group">
+            <div class="item-group__header"><span class="item-group__title">アイテム ${i + 1}</span></div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">タイトル（日本語）</label>
+                <input class="form-input svc-item-ja" value="${esc(item.titleJa || '')}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">タイトル（英語）</label>
+                <input class="form-input svc-item-en" value="${esc(item.titleEn || '')}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">説明文</label>
+              <div class="svc-item-text" id="svc-text-${i}"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">基本設定</h3>
+          <div class="form-group">
+            <label class="form-label">メニュー表示名</label>
+            <input class="form-input" id="svc-menuTitle" value="${esc(c.menuTitle || '')}">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">タイトル（英語）</label>
+              <input class="form-input" id="svc-title" value="${esc(c.title || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">サブタイトル（日本語）</label>
+              <input class="form-input" id="svc-subtitle" value="${esc(c.subtitle || '')}">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card__title">商品の強み（3つ）</h3>
+          ${itemsHtml}
+        </div>
+        <button class="btn-save" onclick="saveSection('service')">保存する</button>
+      `;
+
+      (c.items || []).forEach((item, i) => {
+        quillInstances['svc-text-' + i] = new Quill('#svc-text-' + i, { theme: 'snow', placeholder: '説明文を入力...', modules: { toolbar: [['bold', 'italic'], ['clean']] } });
+        quillInstances['svc-text-' + i].root.innerHTML = item.text || '';
+      });
+    }
+
+    // ----- Sales Record -----
+    function renderSales(panel, c) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">基本設定</h3>
+          <div class="form-group">
+            <label class="form-label">メニュー表示名</label>
+            <input class="form-input" id="sales-menuTitle" value="${esc(c.menuTitle || '')}">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">タイトル（英語）</label>
+              <input class="form-input" id="sales-title" value="${esc(c.title || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">サブタイトル（日本語）</label>
+              <input class="form-input" id="sales-subtitle" value="${esc(c.subtitle || '')}">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card__title">売上データ</h3>
+          <div id="sales-years"></div>
+          <button class="btn-add" onclick="addSalesYear()" style="margin-top:12px">＋ 年を追加</button>
+        </div>
+        <button class="btn-save" onclick="saveSection('sales')">保存する</button>
+      `;
+      renderSalesYears(c.years || []);
+    }
+
+    function renderSalesYears(years) {
+      const container = document.getElementById('sales-years');
+      container.innerHTML = '';
+      years.forEach((year, yi) => {
+        const yearDiv = document.createElement('div');
+        yearDiv.className = 'item-group';
+        yearDiv.dataset.yearIdx = yi;
+
+        let quartersHtml = '';
+        (year.quarters || []).forEach((q, qi) => {
+          let rowsHtml = '';
+          (q.rows || []).forEach((row, ri) => {
+            rowsHtml += `<div class="item-row sales-row" data-ri="${ri}">
+              <input class="form-input sr-month" value="${esc(row.month)}" placeholder="月" style="width:80px;flex:none">
+              <input class="form-input sr-store" value="${esc(row.store)}" placeholder="催事店舗名">
+              <input class="form-input sr-amount" value="${esc(row.amount)}" placeholder="売上金額" style="width:180px;flex:none">
+              <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+            </div>`;
+          });
+          quartersHtml += `<div class="item-group" style="background:#fff;margin-bottom:12px" data-qi="${qi}">
+            <div class="item-group__header">
+              <input class="form-input sq-label" value="${esc(q.label)}" style="width:160px" placeholder="例: 1月〜3月">
+              <button class="btn-remove" onclick="this.closest('[data-qi]').remove()">四半期を削除</button>
+            </div>
+            <div class="sales-rows">${rowsHtml}</div>
+            <button class="btn-add" onclick="addSalesRow(this)" style="margin-top:8px">＋ 行を追加</button>
+          </div>`;
+        });
+
+        yearDiv.innerHTML = `
+          <div class="item-group__header">
+            <div style="display:flex;align-items:center;gap:12px">
+              <input class="form-input sy-year" value="${esc(year.year)}" style="width:120px;font-weight:700;font-size:18px" placeholder="年">
+              <span style="font-size:18px;font-weight:700">年</span>
+            </div>
+            <button class="btn-remove" onclick="this.closest('[data-year-idx]').remove()">年を削除</button>
+          </div>
+          <div class="sales-quarters">${quartersHtml}</div>
+          <button class="btn-add" onclick="addSalesQuarter(this)">＋ 四半期を追加</button>
+        `;
+        container.appendChild(yearDiv);
+      });
+    }
+
+    function addSalesYear() {
+      const container = document.getElementById('sales-years');
+      const yi = container.children.length;
+      const yearDiv = document.createElement('div');
+      yearDiv.className = 'item-group';
+      yearDiv.dataset.yearIdx = yi;
+      yearDiv.innerHTML = `
+        <div class="item-group__header">
+          <div style="display:flex;align-items:center;gap:12px">
+            <input class="form-input sy-year" value="" style="width:120px;font-weight:700;font-size:18px" placeholder="年">
+            <span style="font-size:18px;font-weight:700">年</span>
+          </div>
+          <button class="btn-remove" onclick="this.closest('[data-year-idx]').remove()">年を削除</button>
+        </div>
+        <div class="sales-quarters"></div>
+        <button class="btn-add" onclick="addSalesQuarter(this)">＋ 四半期を追加</button>
+      `;
+      container.prepend(yearDiv);
+    }
+
+    function addSalesQuarter(btn) {
+      const quartersDiv = btn.previousElementSibling;
+      const qi = quartersDiv.children.length;
+      const qDiv = document.createElement('div');
+      qDiv.className = 'item-group';
+      qDiv.style.cssText = 'background:#fff;margin-bottom:12px';
+      qDiv.dataset.qi = qi;
+      qDiv.innerHTML = `
+        <div class="item-group__header">
+          <input class="form-input sq-label" value="" style="width:160px" placeholder="例: 1月〜3月">
+          <button class="btn-remove" onclick="this.closest('[data-qi]').remove()">四半期を削除</button>
+        </div>
+        <div class="sales-rows"></div>
+        <button class="btn-add" onclick="addSalesRow(this)" style="margin-top:8px">＋ 行を追加</button>
+      `;
+      quartersDiv.appendChild(qDiv);
+    }
+
+    function addSalesRow(btn) {
+      const rowsDiv = btn.previousElementSibling;
+      const row = document.createElement('div');
+      row.className = 'item-row sales-row';
+      row.innerHTML = `
+        <input class="form-input sr-month" value="" placeholder="月" style="width:80px;flex:none">
+        <input class="form-input sr-store" value="" placeholder="催事店舗名">
+        <input class="form-input sr-amount" value="" placeholder="売上金額" style="width:180px;flex:none">
+        <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+      `;
+      rowsDiv.appendChild(row);
+    }
+
+    // ----- Works -----
+    function renderWorks(panel, c) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">基本設定</h3>
+          <div class="form-group">
+            <label class="form-label">メニュー表示名</label>
+            <input class="form-input" id="works-menuTitle" value="${esc(c.menuTitle || '')}">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">タイトル（英語）</label>
+              <input class="form-input" id="works-title" value="${esc(c.title || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">サブタイトル（日本語）</label>
+              <input class="form-input" id="works-subtitle" value="${esc(c.subtitle || '')}">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card__title">スライド一覧</h3>
+          <div id="works-slides"></div>
+          <button class="btn-add" onclick="addWorksSlide()" style="margin-top:12px">＋ スライドを追加</button>
+        </div>
+        <button class="btn-save" onclick="saveSection('works')">保存する</button>
+      `;
+      renderWorksSlides(c.slides || []);
+    }
+
+    function renderWorksSlides(slides) {
+      const container = document.getElementById('works-slides');
+      container.innerHTML = '';
+      slides.forEach((slide, i) => {
+        const div = document.createElement('div');
+        div.className = 'item-group works-slide-item';
+        div.innerHTML = `
+          <div class="item-group__header">
+            <span class="item-group__title">スライド ${i + 1}</span>
+            <button class="btn-remove" onclick="this.closest('.works-slide-item').remove()">削除</button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">画像</label>
+            <div class="works-slide-img" data-idx="${i}"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">店舗名</label>
+            <input class="form-input ws-location" value="${esc(slide.location || '')}">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">会社名</label>
+              <input class="form-input ws-company" value="${esc(slide.company || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">商品タグ</label>
+              <input class="form-input ws-product" value="${esc(slide.product || '')}">
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+
+        const imgContainer = div.querySelector('.works-slide-img');
+        setupImageUpload(imgContainer, slide.image, () => {});
+      });
+    }
+
+    function addWorksSlide() {
+      const container = document.getElementById('works-slides');
+      const i = container.children.length;
+      const div = document.createElement('div');
+      div.className = 'item-group works-slide-item';
+      div.innerHTML = `
+        <div class="item-group__header">
+          <span class="item-group__title">スライド ${i + 1}</span>
+          <button class="btn-remove" onclick="this.closest('.works-slide-item').remove()">削除</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label">画像</label>
+          <div class="works-slide-img" data-idx="${i}"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">店舗名</label>
+          <input class="form-input ws-location" value="">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">会社名</label>
+            <input class="form-input ws-company" value="">
+          </div>
+          <div class="form-group">
+            <label class="form-label">商品タグ</label>
+            <input class="form-input ws-product" value="">
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+      setupImageUpload(div.querySelector('.works-slide-img'), '', () => {});
+    }
+
+    // ----- Clients -----
+    function renderClients(panel, c) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">基本設定</h3>
+          <div class="form-group">
+            <label class="form-label">メニュー表示名</label>
+            <input class="form-input" id="clients-menuTitle" value="${esc(c.menuTitle || '')}">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">タイトル（英語）</label>
+              <input class="form-input" id="clients-title" value="${esc(c.title || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">サブタイトル（日本語）</label>
+              <input class="form-input" id="clients-subtitle" value="${esc(c.subtitle || '')}">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card__title">取引先一覧</h3>
+          <div id="clients-items"></div>
+          <button class="btn-add" onclick="addClient()" style="margin-top:12px">＋ 取引先を追加</button>
+          <div class="form-group" style="margin-top:20px">
+            <label class="form-label">備考テキスト</label>
+            <input class="form-input" id="clients-note" value="${esc(c.note || '')}">
+          </div>
+        </div>
+        <button class="btn-save" onclick="saveSection('clients')">保存する</button>
+      `;
+      const itemsDiv = document.getElementById('clients-items');
+      (c.items || []).forEach(name => {
+        addClientRow(itemsDiv, name);
+      });
+    }
+
+    function addClientRow(container, name) {
+      const row = document.createElement('div');
+      row.className = 'item-row client-row';
+      row.innerHTML = `
+        <input class="form-input cl-name" value="${esc(name || '')}">
+        <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function addClient() {
+      addClientRow(document.getElementById('clients-items'), '');
+    }
+
+    // ----- Company -----
+    function renderCompany(panel, c) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">基本設定</h3>
+          <div class="form-group">
+            <label class="form-label">メニュー表示名</label>
+            <input class="form-input" id="company-menuTitle" value="${esc(c.menuTitle || '')}">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">タイトル（英語）</label>
+              <input class="form-input" id="company-title" value="${esc(c.title || '')}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">サブタイトル（日本語）</label>
+              <input class="form-input" id="company-subtitle" value="${esc(c.subtitle || '')}">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card__title">会社情報</h3>
+          <div id="company-rows"></div>
+          <button class="btn-add" onclick="addCompanyRow()" style="margin-top:12px">＋ 項目を追加</button>
+        </div>
+        <button class="btn-save" onclick="saveSection('company')">保存する</button>
+      `;
+      const rowsDiv = document.getElementById('company-rows');
+      (c.rows || []).forEach(row => {
+        addCompanyItem(rowsDiv, row.label, row.value);
+      });
+    }
+
+    function addCompanyItem(container, label, value) {
+      const row = document.createElement('div');
+      row.className = 'item-row company-row-item';
+      row.innerHTML = `
+        <input class="form-input co-label" value="${esc(label || '')}" placeholder="項目名" style="width:160px;flex:none">
+        <input class="form-input co-value" value="${esc(value || '')}" placeholder="内容">
+        <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function addCompanyRow() {
+      addCompanyItem(document.getElementById('company-rows'), '', '');
+    }
+
+    // ==========================================
+    // Content Collectors
+    // ==========================================
+    function collectContent(sectionId) {
+      switch (sectionId) {
+        case 'message': return collectMessage();
+        case 'about': return collectAbout();
+        case 'service': return collectService();
+        case 'sales': return collectSales();
+        case 'works': return collectWorks();
+        case 'clients': return collectClients();
+        case 'company': return collectCompany();
+      }
+      return {};
+    }
+
+    function collectMessage() {
+      const lines = document.getElementById('msg-lines').value.split('\n').filter(l => l.trim());
+      const items = [];
+      document.querySelectorAll('#msg-items .item-group').forEach(group => {
+        const imgEl = group.querySelector('.img-upload__preview');
+        items.push({
+          num: group.querySelector('.msg-item-num').value,
+          en: group.querySelector('.msg-item-en').value,
+          ja: group.querySelector('.msg-item-ja').value,
+          title: group.querySelector('.msg-item-title').value,
+          image: imgEl ? imgEl.src : ''
+        });
+      });
+      return {
+        lines,
+        visionText: document.getElementById('msg-visionText').value,
+        bgText: document.getElementById('msg-bgText').value,
+        countLabel: document.getElementById('msg-countLabel').value,
+        countNumber: document.getElementById('msg-countNumber').value,
+        countText: document.getElementById('msg-countText').value,
+        items
+      };
+    }
+
+    function collectAbout() {
+      return {
+        title: document.getElementById('about-title').value,
+        subtitle: document.getElementById('about-subtitle').value,
+        menuTitle: document.getElementById('about-menuTitle').value,
+        lead: quillInstances['about-lead'] ? quillInstances['about-lead'].root.innerHTML : '',
+        text: quillInstances['about-text'] ? quillInstances['about-text'].root.innerHTML : ''
+      };
+    }
+
+    function collectService() {
+      const items = [];
+      document.querySelectorAll('#panel-service .item-group').forEach((group, i) => {
+        items.push({
+          titleJa: group.querySelector('.svc-item-ja').value,
+          titleEn: group.querySelector('.svc-item-en').value,
+          text: quillInstances['svc-text-' + i] ? quillInstances['svc-text-' + i].root.innerHTML : ''
+        });
+      });
+      return {
+        title: document.getElementById('svc-title').value,
+        subtitle: document.getElementById('svc-subtitle').value,
+        menuTitle: document.getElementById('svc-menuTitle').value,
+        items
+      };
+    }
+
+    function collectSales() {
+      const years = [];
+      document.querySelectorAll('#sales-years > [data-year-idx]').forEach(yearDiv => {
+        const quarters = [];
+        yearDiv.querySelectorAll('[data-qi]').forEach(qDiv => {
+          const rows = [];
+          qDiv.querySelectorAll('.sales-row').forEach(rowDiv => {
+            rows.push({
+              month: rowDiv.querySelector('.sr-month').value,
+              store: rowDiv.querySelector('.sr-store').value,
+              amount: rowDiv.querySelector('.sr-amount').value
+            });
+          });
+          quarters.push({ label: qDiv.querySelector('.sq-label').value, rows });
+        });
+        years.push({ year: yearDiv.querySelector('.sy-year').value, quarters });
+      });
+      return {
+        title: document.getElementById('sales-title').value,
+        subtitle: document.getElementById('sales-subtitle').value,
+        menuTitle: document.getElementById('sales-menuTitle').value,
+        years
+      };
+    }
+
+    function collectWorks() {
+      const slides = [];
+      document.querySelectorAll('.works-slide-item').forEach(div => {
+        const imgEl = div.querySelector('.img-upload__preview');
+        slides.push({
+          location: div.querySelector('.ws-location').value,
+          company: div.querySelector('.ws-company').value,
+          product: div.querySelector('.ws-product').value,
+          image: imgEl ? imgEl.src : ''
+        });
+      });
+      return {
+        title: document.getElementById('works-title').value,
+        subtitle: document.getElementById('works-subtitle').value,
+        menuTitle: document.getElementById('works-menuTitle').value,
+        slides
+      };
+    }
+
+    function collectClients() {
+      const items = [];
+      document.querySelectorAll('.client-row').forEach(row => {
+        const v = row.querySelector('.cl-name').value.trim();
+        if (v) items.push(v);
+      });
+      return {
+        title: document.getElementById('clients-title').value,
+        subtitle: document.getElementById('clients-subtitle').value,
+        menuTitle: document.getElementById('clients-menuTitle').value,
+        items,
+        note: document.getElementById('clients-note').value
+      };
+    }
+
+    function collectCompany() {
+      const rows = [];
+      document.querySelectorAll('.company-row-item').forEach(row => {
+        rows.push({
+          label: row.querySelector('.co-label').value,
+          value: row.querySelector('.co-value').value
+        });
+      });
+      return {
+        title: document.getElementById('company-title').value,
+        subtitle: document.getElementById('company-subtitle').value,
+        menuTitle: document.getElementById('company-menuTitle').value,
+        rows
+      };
+    }
+
+    // ==========================================
+    // Navigation
+    // ==========================================
+    function switchSection(sectionId) {
+      activeSection = sectionId;
+      document.querySelectorAll('.sidebar__link').forEach(link => {
+        link.classList.toggle('is-active', link.dataset.section === sectionId);
+      });
+      document.querySelectorAll('.panel').forEach(panel => {
+        panel.classList.toggle('is-active', panel.id === 'panel-' + sectionId);
+      });
+      updateHeader(sectionId);
+    }
+
+    function updateHeader(sectionId) {
+      const sec = SECTIONS.find(s => s.id === sectionId);
+      if (sec) {
+        document.getElementById('mainTitle').textContent = sec.label;
+        document.getElementById('mainDesc').textContent = sec.desc;
+      }
+    }
+
+    // ==========================================
+    // UI Helpers
+    // ==========================================
+    function showToast(msg, type) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast toast--' + type + ' is-show';
+      setTimeout(() => { toast.classList.remove('is-show'); }, 3000);
+    }
+
+    function esc(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML.replace(/"/g, '&quot;');
+    }
+
+    // ==========================================
+    // Init
+    // ==========================================
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+    checkSession();
+  </script>
+</body>
+</html>
