@@ -376,46 +376,115 @@
           <h2 class="p-sales__title">Sales Record</h2>
           <span class="p-sales__subtitle">売上実績</span>
         </div>
-        <div class="p-sales__table-wrap js-reveal">
-          <table class="p-sales__table">
-            <thead>
-              <tr>
-                <th>年月</th>
-                <th>催事店舗名</th>
-                <th class="p-sales__th-amount">売上金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>2025年1月</td><td>イオン小野</td><td class="p-sales__td-amount">7,110,000円</td></tr>
-              <tr><td>2025年1月</td><td>IY石巻</td><td class="p-sales__td-amount">7,036,000円</td></tr>
-              <tr><td>2025年2月</td><td>ダイエーおおとり</td><td class="p-sales__td-amount">8,591,000円</td></tr>
-              <tr><td>2025年2月</td><td>IY龍ヶ崎</td><td class="p-sales__td-amount">5,006,000円</td></tr>
-              <tr><td>2025年3月</td><td>ダイエー西宮</td><td class="p-sales__td-amount">6,036,000円</td></tr>
-              <tr><td>2025年3月</td><td>IY龍ヶ崎</td><td class="p-sales__td-amount">4,640,000円</td></tr>
-              <tr><td>2025年4月</td><td>イオン浜松市野</td><td class="p-sales__td-amount">4,725,000円</td></tr>
-              <tr><td>2025年4月</td><td>イオンモール常滑</td><td class="p-sales__td-amount">3,862,000円</td></tr>
-              <tr><td>2025年5月</td><td>イオンモール常滑</td><td class="p-sales__td-amount">5,500,000円</td></tr>
-              <tr><td>2025年5月</td><td>ゆめタウン常滑</td><td class="p-sales__td-amount">4,532,000円</td></tr>
-              <tr><td>2025年6月</td><td>ゆめタウン久留米</td><td class="p-sales__td-amount">8,867,000円</td></tr>
-              <tr><td>2025年6月</td><td>イオンモール土浦</td><td class="p-sales__td-amount">3,017,000円</td></tr>
-              <tr><td>2025年7月</td><td>ゆめタウン広島</td><td class="p-sales__td-amount">6,379,000円</td></tr>
-              <tr><td>2025年7月</td><td>イオンモール船橋</td><td class="p-sales__td-amount">3,697,000円</td></tr>
-              <tr><td>2025年8月</td><td>ダイエー曽根</td><td class="p-sales__td-amount">9,115,000円</td></tr>
-              <tr><td>2025年8月</td><td>イオンモール船橋</td><td class="p-sales__td-amount">4,093,000円</td></tr>
-              <tr><td>2025年9月</td><td>ゆめタウン久留米</td><td class="p-sales__td-amount">10,272,000円</td></tr>
-              <tr><td>2025年9月</td><td>イオンモール船橋</td><td class="p-sales__td-amount">3,624,000円</td></tr>
-              <tr><td>2025年10月</td><td>イオンモール鹿児島</td><td class="p-sales__td-amount">4,375,000円</td></tr>
-              <tr><td>2025年10月</td><td>ダイエー塚口</td><td class="p-sales__td-amount">3,914,000円</td></tr>
-              <tr><td>2025年11月</td><td>ゆめタウン徳島</td><td class="p-sales__td-amount">5,370,000円</td></tr>
-              <tr><td>2025年11月</td><td>イオン高砂</td><td class="p-sales__td-amount">3,356,000円</td></tr>
-              <tr><td>2025年12月</td><td>イオンモール鳥取北</td><td class="p-sales__td-amount">5,436,000円</td></tr>
-              <tr><td>2025年12月</td><td>ダイエー十日市場</td><td class="p-sales__td-amount">2,048,000円</td></tr>
-              <tr><td>2026年1月</td><td>イオンモール鳥取北</td><td class="p-sales__td-amount">3,291,000円</td></tr>
-              <tr><td>2026年1月</td><td>心斎橋オーパ</td><td class="p-sales__td-amount">2,562,000円</td></tr>
-              <tr><td>2026年2月</td><td>ダイエー上溝</td><td class="p-sales__td-amount">8,763,000円</td></tr>
-              <tr><td>2026年2月</td><td>イオン土浦港</td><td class="p-sales__td-amount">7,038,000円</td></tr>
-            </tbody>
-          </table>
+        <div class="p-sales__accordion js-reveal">
+
+          <!-- 2026年 -->
+          <div class="p-sales__year">
+            <h3 class="p-sales__year-title">2026年</h3>
+            <div class="p-sales__cards">
+              <div class="p-sales__card">
+                <button class="p-sales__card-header" type="button" aria-expanded="false">
+                  <span class="p-sales__card-label">1月〜3月</span>
+                  <span class="p-sales__card-icon"></span>
+                </button>
+                <div class="p-sales__card-body">
+                  <table class="p-sales__table">
+                    <thead><tr><th>月</th><th>催事店舗名</th><th class="p-sales__th-amount">売上金額</th></tr></thead>
+                    <tbody>
+                      <tr><td>1月</td><td>イオンモール鳥取北</td><td class="p-sales__td-amount">3,291,000円</td></tr>
+                      <tr><td>1月</td><td>心斎橋オーパ</td><td class="p-sales__td-amount">2,562,000円</td></tr>
+                      <tr><td>2月</td><td>ダイエー上溝</td><td class="p-sales__td-amount">8,763,000円</td></tr>
+                      <tr><td>2月</td><td>イオン土浦港</td><td class="p-sales__td-amount">7,038,000円</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2025年 -->
+          <div class="p-sales__year">
+            <h3 class="p-sales__year-title">2025年</h3>
+            <div class="p-sales__cards">
+              <div class="p-sales__card">
+                <button class="p-sales__card-header" type="button" aria-expanded="false">
+                  <span class="p-sales__card-label">10月〜12月</span>
+                  <span class="p-sales__card-icon"></span>
+                </button>
+                <div class="p-sales__card-body">
+                  <table class="p-sales__table">
+                    <thead><tr><th>月</th><th>催事店舗名</th><th class="p-sales__th-amount">売上金額</th></tr></thead>
+                    <tbody>
+                      <tr><td>10月</td><td>イオンモール鹿児島</td><td class="p-sales__td-amount">4,375,000円</td></tr>
+                      <tr><td>10月</td><td>ダイエー塚口</td><td class="p-sales__td-amount">3,914,000円</td></tr>
+                      <tr><td>11月</td><td>ゆめタウン徳島</td><td class="p-sales__td-amount">5,370,000円</td></tr>
+                      <tr><td>11月</td><td>イオン高砂</td><td class="p-sales__td-amount">3,356,000円</td></tr>
+                      <tr><td>12月</td><td>イオンモール鳥取北</td><td class="p-sales__td-amount">5,436,000円</td></tr>
+                      <tr><td>12月</td><td>ダイエー十日市場</td><td class="p-sales__td-amount">2,048,000円</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="p-sales__card">
+                <button class="p-sales__card-header" type="button" aria-expanded="false">
+                  <span class="p-sales__card-label">7月〜9月</span>
+                  <span class="p-sales__card-icon"></span>
+                </button>
+                <div class="p-sales__card-body">
+                  <table class="p-sales__table">
+                    <thead><tr><th>月</th><th>催事店舗名</th><th class="p-sales__th-amount">売上金額</th></tr></thead>
+                    <tbody>
+                      <tr><td>7月</td><td>ゆめタウン広島</td><td class="p-sales__td-amount">6,379,000円</td></tr>
+                      <tr><td>7月</td><td>イオンモール船橋</td><td class="p-sales__td-amount">3,697,000円</td></tr>
+                      <tr><td>8月</td><td>ダイエー曽根</td><td class="p-sales__td-amount">9,115,000円</td></tr>
+                      <tr><td>8月</td><td>イオンモール船橋</td><td class="p-sales__td-amount">4,093,000円</td></tr>
+                      <tr><td>9月</td><td>ゆめタウン久留米</td><td class="p-sales__td-amount">10,272,000円</td></tr>
+                      <tr><td>9月</td><td>イオンモール船橋</td><td class="p-sales__td-amount">3,624,000円</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="p-sales__card">
+                <button class="p-sales__card-header" type="button" aria-expanded="false">
+                  <span class="p-sales__card-label">4月〜6月</span>
+                  <span class="p-sales__card-icon"></span>
+                </button>
+                <div class="p-sales__card-body">
+                  <table class="p-sales__table">
+                    <thead><tr><th>月</th><th>催事店舗名</th><th class="p-sales__th-amount">売上金額</th></tr></thead>
+                    <tbody>
+                      <tr><td>4月</td><td>イオン浜松市野</td><td class="p-sales__td-amount">4,725,000円</td></tr>
+                      <tr><td>4月</td><td>イオンモール常滑</td><td class="p-sales__td-amount">3,862,000円</td></tr>
+                      <tr><td>5月</td><td>イオンモール常滑</td><td class="p-sales__td-amount">5,500,000円</td></tr>
+                      <tr><td>5月</td><td>ゆめタウン常滑</td><td class="p-sales__td-amount">4,532,000円</td></tr>
+                      <tr><td>6月</td><td>ゆめタウン久留米</td><td class="p-sales__td-amount">8,867,000円</td></tr>
+                      <tr><td>6月</td><td>イオンモール土浦</td><td class="p-sales__td-amount">3,017,000円</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="p-sales__card">
+                <button class="p-sales__card-header" type="button" aria-expanded="false">
+                  <span class="p-sales__card-label">1月〜3月</span>
+                  <span class="p-sales__card-icon"></span>
+                </button>
+                <div class="p-sales__card-body">
+                  <table class="p-sales__table">
+                    <thead><tr><th>月</th><th>催事店舗名</th><th class="p-sales__th-amount">売上金額</th></tr></thead>
+                    <tbody>
+                      <tr><td>1月</td><td>イオン小野</td><td class="p-sales__td-amount">7,110,000円</td></tr>
+                      <tr><td>1月</td><td>IY石巻</td><td class="p-sales__td-amount">7,036,000円</td></tr>
+                      <tr><td>2月</td><td>ダイエーおおとり</td><td class="p-sales__td-amount">8,591,000円</td></tr>
+                      <tr><td>2月</td><td>IY龍ヶ崎</td><td class="p-sales__td-amount">5,006,000円</td></tr>
+                      <tr><td>3月</td><td>ダイエー西宮</td><td class="p-sales__td-amount">6,036,000円</td></tr>
+                      <tr><td>3月</td><td>IY龍ヶ崎</td><td class="p-sales__td-amount">4,640,000円</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -1007,6 +1076,18 @@
               }, 900);
             }, 1200);
           }
+        });
+      });
+    })();
+
+    /* ===== Sales Accordion ===== */
+    (function() {
+      document.querySelectorAll('.p-sales__card-header').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', String(!expanded));
+          var body = this.nextElementSibling;
+          body.classList.toggle('is-open');
         });
       });
     })();

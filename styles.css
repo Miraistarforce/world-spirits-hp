@@ -1293,7 +1293,7 @@ body.is-loaded .p-home-first__scroll {
 }
 
 .p-sales__inner {
-  max-width: var(--container-l);
+  max-width: var(--container);
   margin: 0 auto;
   padding: 0 60px;
 }
@@ -1320,27 +1320,119 @@ body.is-loaded .p-home-first__scroll {
   margin-top: 12px;
 }
 
-.p-sales__table-wrap {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+/* Accordion */
+.p-sales__accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.p-sales__year-title {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  color: var(--color-main);
+  margin-bottom: 20px;
+  letter-spacing: 0.04em;
+}
+
+.p-sales__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.p-sales__card {
+  border-radius: 4px;
   overflow: hidden;
 }
 
+.p-sales__card-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  background: var(--color-blue);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s;
+  font-family: inherit;
+}
+
+.p-sales__card-header:hover {
+  background: var(--color-blue-dark);
+}
+
+.p-sales__card-header[aria-expanded="true"] {
+  background: var(--color-blue-dark);
+}
+
+.p-sales__card-label {
+  font-size: clamp(15px, 1.4vw, 17px);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.p-sales__card-icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.p-sales__card-icon::before,
+.p-sales__card-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #fff;
+  transition: transform 0.3s;
+}
+
+.p-sales__card-icon::before {
+  width: 18px;
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+.p-sales__card-icon::after {
+  width: 2px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+}
+
+.p-sales__card-header[aria-expanded="true"] .p-sales__card-icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.p-sales__card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  background: #fff;
+}
+
+.p-sales__card-body.is-open {
+  max-height: 600px;
+}
+
+/* Table inside accordion */
 .p-sales__table {
   width: 100%;
   border-collapse: collapse;
 }
 
 .p-sales__table thead {
-  background: var(--color-blue);
+  background: rgba(0, 74, 153, 0.06);
 }
 
 .p-sales__table th {
-  padding: 16px 24px;
-  font-size: 15px;
+  padding: 12px 24px;
+  font-size: 13px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-light);
   text-align: left;
   letter-spacing: 0.04em;
 }
@@ -1363,7 +1455,7 @@ body.is-loaded .p-home-first__scroll {
 }
 
 .p-sales__table td {
-  padding: 14px 24px;
+  padding: 13px 24px;
   font-size: 15px;
   color: var(--color-text);
   line-height: 1.6;
@@ -2220,6 +2312,10 @@ body.is-loaded .p-home-first__scroll {
     padding: 0 32px;
   }
 
+  .p-sales__card-header {
+    padding: 16px 24px;
+  }
+
   /* Works */
   .p-works__carousel {
     height: 360px;
@@ -2532,9 +2628,26 @@ body.is-loaded .p-home-first__scroll {
     margin-bottom: 32px;
   }
 
+  .p-sales__accordion {
+    gap: 36px;
+  }
+
+  .p-sales__year-title {
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+
+  .p-sales__card-header {
+    padding: 14px 18px;
+  }
+
+  .p-sales__card-label {
+    font-size: 14px;
+  }
+
   .p-sales__table th {
-    padding: 12px 14px;
-    font-size: 13px;
+    padding: 10px 14px;
+    font-size: 12px;
   }
 
   .p-sales__table td {
