@@ -1408,14 +1408,18 @@ body.is-loaded .p-home-first__scroll {
 }
 
 .p-sales__card-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   background: #fff;
 }
 
+.p-sales__card-body-inner {
+  overflow: hidden;
+}
+
 .p-sales__card-body.is-open {
-  max-height: 600px;
+  grid-template-rows: 1fr;
 }
 
 /* Table inside accordion */
