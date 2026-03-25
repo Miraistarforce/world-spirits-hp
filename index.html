@@ -737,10 +737,17 @@
 
     // Header scroll effect
     const header = document.getElementById('header');
+    let headerTicking = false;
     window.addEventListener('scroll', () => {
-      header.classList.toggle('is-scrolled', window.scrollY > 100);
-      document.getElementById('pagetop').classList.toggle('is-visible', window.scrollY > 500);
-    });
+      if (!headerTicking) {
+        requestAnimationFrame(() => {
+          header.classList.toggle('is-scrolled', window.scrollY > 100);
+          document.getElementById('pagetop').classList.toggle('is-visible', window.scrollY > 500);
+          headerTicking = false;
+        });
+        headerTicking = true;
+      }
+    }, { passive: true });
 
     // Mobile menu
     const menuBtn = document.getElementById('menuBtn');
@@ -808,7 +815,13 @@
       secondSection.style.setProperty('--info-opacity', infoOpacity);
       secondSection.style.setProperty('--info-y', infoY + 'px');
     }
-    window.addEventListener('scroll', updateScrollAnim, { passive: true });
+    let scrollAnimTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollAnimTicking) {
+        requestAnimationFrame(() => { updateScrollAnim(); scrollAnimTicking = false; });
+        scrollAnimTicking = true;
+      }
+    }, { passive: true });
     updateScrollAnim();
 
     // Our Vision scroll animation
@@ -837,7 +850,13 @@
       visionSection.style.setProperty('--vision-size', size + 'px');
       visionSection.style.setProperty('--vision-opacity', visionOpacity);
     }
-    window.addEventListener('scroll', updateVision, { passive: true });
+    let visionTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!visionTicking) {
+        requestAnimationFrame(() => { updateVision(); visionTicking = false; });
+        visionTicking = true;
+      }
+    }, { passive: true });
     updateVision();
 
     // Service showcase: cube rotation + side text switching
@@ -909,7 +928,13 @@
         }
       });
     }
-    window.addEventListener('scroll', updateService, { passive: true });
+    let serviceTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!serviceTicking) {
+        requestAnimationFrame(() => { updateService(); serviceTicking = false; });
+        serviceTicking = true;
+      }
+    }, { passive: true });
     updateService();
 
     // Scroll reveal
