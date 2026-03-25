@@ -1476,6 +1476,7 @@ body.is-loaded .p-home-first__scroll {
   font-weight: 700;
   color: var(--color-blue);
   letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ========================================
