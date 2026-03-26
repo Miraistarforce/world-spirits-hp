@@ -758,7 +758,7 @@
               <span class="sales-year-count">${(year.quarters || []).reduce((s,q) => s + (q.rows||[]).length, 0)}件</span>
             </div>
             <div style="display:flex;align-items:center;gap:12px">
-              <button class="btn-remove" onclick="event.stopPropagation();this.closest('.sales-year-card').remove()" style="font-size:11px">年を削除</button>
+              <button class="btn-remove" onclick="event.stopPropagation();if(confirm('この年のデータをすべて削除しますか？'))this.closest('.sales-year-card').remove()" style="font-size:11px">年を削除</button>
               <span class="sales-year-arrow">${isFirstYear ? '▲' : '▼'}</span>
             </div>
           </div>
@@ -791,7 +791,7 @@
           <input class="form-input sr-month" value="${esc(row.month)}" placeholder="月" style="width:80px;flex:none">
           <input class="form-input sr-store" value="${esc(row.store)}" placeholder="催事店舗名">
           <input class="form-input sr-amount" value="${esc(row.amount)}" placeholder="売上金額" style="width:180px;flex:none">
-          <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+          <button class="btn-remove" onclick="if(confirm('この行を削除しますか？'))this.parentElement.remove()">×</button>
         </div>`;
       });
 
@@ -802,7 +802,7 @@
             <input class="form-input sq-label" value="${esc(q.label)}" style="width:140px;font-weight:600;background:transparent;border:none;color:inherit;padding:0" placeholder="例: 1月〜3月" onclick="event.stopPropagation()">
             <span style="font-size:12px;color:#888">(${(q.rows||[]).length}件)</span>
           </div>
-          <button class="btn-remove" onclick="event.stopPropagation();this.closest('.sales-quarter-card').remove()" style="font-size:11px">削除</button>
+          <button class="btn-remove" onclick="event.stopPropagation();if(confirm('この四半期のデータを削除しますか？'))this.closest('.sales-quarter-card').remove()" style="font-size:11px">削除</button>
         </div>
         <div class="sales-q-body" style="${isOpen ? '' : 'display:none'}">
           <div style="padding:8px 0 12px">
@@ -846,7 +846,7 @@
             <span class="sales-year-count">0件</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px">
-            <button class="btn-remove" onclick="event.stopPropagation();this.closest('.sales-year-card').remove()" style="font-size:11px">年を削除</button>
+            <button class="btn-remove" onclick="event.stopPropagation();if(confirm('この年のデータをすべて削除しますか？'))this.closest('.sales-year-card').remove()" style="font-size:11px">年を削除</button>
             <span class="sales-year-arrow">▲</span>
           </div>
         </div>
@@ -875,7 +875,7 @@
         <input class="form-input sr-month" value="" placeholder="月" style="width:80px;flex:none">
         <input class="form-input sr-store" value="" placeholder="催事店舗名">
         <input class="form-input sr-amount" value="" placeholder="売上金額" style="width:180px;flex:none">
-        <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+        <button class="btn-remove" onclick="if(confirm('この行を削除しますか？'))this.parentElement.remove()">×</button>
       `;
       rowsDiv.prepend(row);
       bindAmountFormat(row.querySelector('.sr-amount'));
