@@ -1095,22 +1095,46 @@
     }
 
     function handleSend() {
-      var main = document.querySelector('.p-contact__main');
-      main.innerHTML =
-        '<div style="text-align:center;padding:120px 40px;">' +
-          '<div style="width:72px;height:72px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">' +
-            '<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:none;stroke:#059669;stroke-width:2.5;"><polyline points="20,6 9,17 4,12"/></svg>' +
-          '</div>' +
-          '<h2 style="font-size:28px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">送信が完了しました</h2>' +
-          '<p style="font-size:15px;color:#6b7280;line-height:2;margin-bottom:48px;">' +
-            'お問い合わせいただきありがとうございます。<br>' +
-            '内容を確認の上、担当者よりご連絡させていただきます。' +
-          '</p>' +
-          '<a href="index.html" style="display:inline-block;background:#1a56a8;color:#fff;padding:16px 48px;border-radius:6px;font-weight:700;letter-spacing:0.08em;text-decoration:none;">トップページへ戻る</a>' +
-        '</div>';
-      setStep(2);
-      document.querySelector('.p-contact__count').style.display = 'none';
-      window.scrollTo(0, 0);
+      // mailtoリンクを組み立て
+      var to = 'asuki1995@gmail.com';
+      var subject = '【ワールドスピリッツ】お問い合わせ';
+      var lines = [];
+      var fields = [
+        { label: '会社名・団体名', key: 'company' },
+        { label: '部署名', key: 'department' },
+        { label: '氏名', key: 'name' },
+        { label: 'フリガナ', key: 'kana' },
+        { label: '電話番号', key: 'tel' },
+        { label: 'メールアドレス', key: 'email' },
+        { label: 'お問い合わせ種別', key: 'type[]' },
+        { label: 'お問い合わせ詳細', key: 'message' }
+      ];
+      fields.forEach(function(f) {
+        var val = formData[f.key];
+        if (!val) return;
+        if (Array.isArray(val)) val = val.join(', ');
+        lines.push('【' + f.label + '】\n' + val);
+      });
+      var body = lines.join('\n\n');
+      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+      // 送信完了画面を表示
+      setTimeout(function() {
+        var main = document.querySelector('.p-contact__main');
+        main.innerHTML =
+          '<div style="text-align:center;padding:120px 40px;">' +
+            '<div style="width:72px;height:72px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">' +
+              '<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:none;stroke:#059669;stroke-width:2.5;"><polyline points="20,6 9,17 4,12"/></svg>' +
+            '</div>' +
+            '<h2 style="font-size:28px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">メールアプリが開きました</h2>' +
+            '<p style="font-size:15px;color:#6b7280;line-height:2;margin-bottom:48px;">' +
+              'メールアプリでお問い合わせ内容をご確認の上、<br>送信ボタンを押してください。' +
+            '</p>' +
+            '<a href="index.html" style="display:inline-block;background:#1a56a8;color:#fff;padding:16px 48px;border-radius:6px;font-weight:700;letter-spacing:0.08em;text-decoration:none;">トップページへ戻る</a>' +
+          '</div>';
+        setStep(2);
+        document.querySelector('.p-contact__count').style.display = 'none';
+      }, 500);
     }
   </script>
 
