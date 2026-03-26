@@ -99,6 +99,22 @@
     .btn-remove:hover { background: #fff0f0; }
     .btn-group { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
 
+    /* Sales accordion cards */
+    .sales-year-card { border: 1px solid #e5e7eb; border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+    .sales-year-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #004a99; color: #fff; cursor: pointer; transition: background 0.2s; }
+    .sales-year-header:hover { background: #003d7a; }
+    .sales-year-header .form-input { color: #fff; }
+    .sales-year-header .form-input::placeholder { color: rgba(255,255,255,0.5); }
+    .sales-year-count { font-size: 12px; background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 10px; }
+    .sales-year-arrow { font-size: 12px; }
+    .sales-year-body { padding: 0 20px 20px; background: #fafbfc; }
+    .sales-quarter-card { border: 1px solid #e0e4ea; border-radius: 8px; margin-bottom: 10px; overflow: hidden; background: #fff; }
+    .sales-q-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #e8f0fe; cursor: pointer; transition: background 0.15s; }
+    .sales-q-header:hover { background: #d0e0ff; }
+    .sales-q-header .form-input { color: #004a99; }
+    .sales-q-arrow { font-size: 10px; color: #004a99; }
+    .sales-q-body { padding: 0 16px 16px; }
+
     /* Toast */
     .toast { position: fixed; top: 24px; right: 24px; padding: 14px 24px; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 500; z-index: 9999; transform: translateX(120%); transition: transform 0.3s ease; }
     .toast.is-show { transform: translateX(0); }
@@ -783,8 +799,8 @@
         </div>
         <div class="card">
           <h3 class="card__title">売上データ</h3>
+          <button class="btn-add" onclick="addSalesYear()" style="margin-bottom:16px">＋ 新しい年を追加</button>
           <div id="sales-years"></div>
-          <button class="btn-add" onclick="addSalesYear()" style="margin-top:12px">＋ 年を追加</button>
         </div>
         <button class="btn-save" onclick="saveSection('sales')">保存する</button>
       `;
@@ -795,86 +811,131 @@
       const container = document.getElementById('sales-years');
       container.innerHTML = '';
       years.forEach((year, yi) => {
-        const yearDiv = document.createElement('div');
-        yearDiv.className = 'item-group';
-        yearDiv.dataset.yearIdx = yi;
+        const yearCard = document.createElement('div');
+        yearCard.className = 'sales-year-card';
+        yearCard.dataset.yearIdx = yi;
 
-        let quartersHtml = '';
-        (year.quarters || []).forEach((q, qi) => {
-          let rowsHtml = '';
-          (q.rows || []).forEach((row, ri) => {
-            rowsHtml += `<div class="item-row sales-row" data-ri="${ri}">
-              <input class="form-input sr-month" value="${esc(row.month)}" placeholder="月" style="width:80px;flex:none">
-              <input class="form-input sr-store" value="${esc(row.store)}" placeholder="催事店舗名">
-              <input class="form-input sr-amount" value="${esc(row.amount)}" placeholder="売上金額" style="width:180px;flex:none">
-              <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
-            </div>`;
-          });
-          quartersHtml += `<div class="item-group" style="background:#fff;margin-bottom:12px" data-qi="${qi}">
-            <div class="item-group__header">
-              <input class="form-input sq-label" value="${esc(q.label)}" style="width:160px" placeholder="例: 1月〜3月">
-              <button class="btn-remove" onclick="this.closest('[data-qi]').remove()">四半期を削除</button>
+        // 年ヘッダー（クリックで開閉）
+        const isFirstYear = (yi === 0);
+        yearCard.innerHTML = `
+          <div class="sales-year-header${isFirstYear ? ' is-open' : ''}" onclick="toggleSalesYear(this)">
+            <div style="display:flex;align-items:center;gap:12px">
+              <input class="form-input sy-year" value="${esc(year.year)}" style="width:100px;font-weight:700;font-size:18px;background:transparent;border:none;color:inherit;padding:0" placeholder="年" onclick="event.stopPropagation()">
+              <span style="font-size:18px;font-weight:700">年</span>
+              <span class="sales-year-count">${(year.quarters || []).reduce((s,q) => s + (q.rows||[]).length, 0)}件</span>
             </div>
-            <div class="sales-rows">${rowsHtml}</div>
-            <button class="btn-add" onclick="addSalesRow(this)" style="margin-top:8px">＋ 行を追加</button>
-          </div>`;
+            <div style="display:flex;align-items:center;gap:12px">
+              <button class="btn-remove" onclick="event.stopPropagation();this.closest('.sales-year-card').remove()" style="font-size:11px">年を削除</button>
+              <span class="sales-year-arrow">${isFirstYear ? '▲' : '▼'}</span>
+            </div>
+          </div>
+          <div class="sales-year-body" style="${isFirstYear ? '' : 'display:none'}">
+            <div style="padding:12px 0 16px;display:flex;gap:10px">
+              <button class="btn-add" onclick="addSalesQuarter(this.closest('.sales-year-card'))">＋ 四半期を追加</button>
+            </div>
+            <div class="sales-quarters"></div>
+          </div>
+        `;
+
+        const quartersDiv = yearCard.querySelector('.sales-quarters');
+        (year.quarters || []).forEach((q, qi) => {
+          const isFirstQ = (yi === 0 && qi === 0);
+          quartersDiv.appendChild(buildQuarterCard(q, qi, isFirstQ));
         });
 
-        yearDiv.innerHTML = `
-          <div class="item-group__header">
-            <div style="display:flex;align-items:center;gap:12px">
-              <input class="form-input sy-year" value="${esc(year.year)}" style="width:120px;font-weight:700;font-size:18px" placeholder="年">
-              <span style="font-size:18px;font-weight:700">年</span>
-            </div>
-            <button class="btn-remove" onclick="this.closest('[data-year-idx]').remove()">年を削除</button>
-          </div>
-          <div class="sales-quarters">${quartersHtml}</div>
-          <button class="btn-add" onclick="addSalesQuarter(this)">＋ 四半期を追加</button>
-        `;
-        container.appendChild(yearDiv);
+        container.appendChild(yearCard);
       });
+    }
+
+    function buildQuarterCard(q, qi, isOpen) {
+      const qDiv = document.createElement('div');
+      qDiv.className = 'sales-quarter-card';
+      qDiv.dataset.qi = qi;
+
+      let rowsHtml = '';
+      (q.rows || []).forEach((row) => {
+        rowsHtml += `<div class="item-row sales-row">
+          <input class="form-input sr-month" value="${esc(row.month)}" placeholder="月" style="width:80px;flex:none">
+          <input class="form-input sr-store" value="${esc(row.store)}" placeholder="催事店舗名">
+          <input class="form-input sr-amount" value="${esc(row.amount)}" placeholder="売上金額" style="width:180px;flex:none">
+          <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+        </div>`;
+      });
+
+      qDiv.innerHTML = `
+        <div class="sales-q-header${isOpen ? ' is-open' : ''}" onclick="toggleSalesQ(this)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="sales-q-arrow">${isOpen ? '▲' : '▼'}</span>
+            <input class="form-input sq-label" value="${esc(q.label)}" style="width:140px;font-weight:600;background:transparent;border:none;color:inherit;padding:0" placeholder="例: 1月〜3月" onclick="event.stopPropagation()">
+            <span style="font-size:12px;color:#888">(${(q.rows||[]).length}件)</span>
+          </div>
+          <button class="btn-remove" onclick="event.stopPropagation();this.closest('.sales-quarter-card').remove()" style="font-size:11px">削除</button>
+        </div>
+        <div class="sales-q-body" style="${isOpen ? '' : 'display:none'}">
+          <div style="padding:8px 0 12px">
+            <button class="btn-add" onclick="addSalesRow(this.closest('.sales-quarter-card'))">＋ 行を追加</button>
+          </div>
+          <div class="sales-rows">${rowsHtml}</div>
+        </div>
+      `;
+      return qDiv;
+    }
+
+    function toggleSalesYear(header) {
+      const body = header.nextElementSibling;
+      const arrow = header.querySelector('.sales-year-arrow');
+      const isOpen = body.style.display !== 'none';
+      body.style.display = isOpen ? 'none' : '';
+      arrow.textContent = isOpen ? '▼' : '▲';
+      header.classList.toggle('is-open', !isOpen);
+    }
+
+    function toggleSalesQ(header) {
+      const body = header.nextElementSibling;
+      const arrow = header.querySelector('.sales-q-arrow');
+      const isOpen = body.style.display !== 'none';
+      body.style.display = isOpen ? 'none' : '';
+      arrow.textContent = isOpen ? '▼' : '▲';
+      header.classList.toggle('is-open', !isOpen);
     }
 
     function addSalesYear() {
       const container = document.getElementById('sales-years');
       const yi = container.children.length;
-      const yearDiv = document.createElement('div');
-      yearDiv.className = 'item-group';
-      yearDiv.dataset.yearIdx = yi;
-      yearDiv.innerHTML = `
-        <div class="item-group__header">
+      const yearCard = document.createElement('div');
+      yearCard.className = 'sales-year-card';
+      yearCard.dataset.yearIdx = yi;
+      yearCard.innerHTML = `
+        <div class="sales-year-header is-open" onclick="toggleSalesYear(this)">
           <div style="display:flex;align-items:center;gap:12px">
-            <input class="form-input sy-year" value="" style="width:120px;font-weight:700;font-size:18px" placeholder="年">
+            <input class="form-input sy-year" value="" style="width:100px;font-weight:700;font-size:18px;background:transparent;border:none;color:inherit;padding:0" placeholder="年" onclick="event.stopPropagation()">
             <span style="font-size:18px;font-weight:700">年</span>
+            <span class="sales-year-count">0件</span>
           </div>
-          <button class="btn-remove" onclick="this.closest('[data-year-idx]').remove()">年を削除</button>
+          <div style="display:flex;align-items:center;gap:12px">
+            <button class="btn-remove" onclick="event.stopPropagation();this.closest('.sales-year-card').remove()" style="font-size:11px">年を削除</button>
+            <span class="sales-year-arrow">▲</span>
+          </div>
         </div>
-        <div class="sales-quarters"></div>
-        <button class="btn-add" onclick="addSalesQuarter(this)">＋ 四半期を追加</button>
+        <div class="sales-year-body">
+          <div style="padding:12px 0 16px;display:flex;gap:10px">
+            <button class="btn-add" onclick="addSalesQuarter(this.closest('.sales-year-card'))">＋ 四半期を追加</button>
+          </div>
+          <div class="sales-quarters"></div>
+        </div>
       `;
-      container.prepend(yearDiv);
+      container.prepend(yearCard);
     }
 
-    function addSalesQuarter(btn) {
-      const quartersDiv = btn.previousElementSibling;
+    function addSalesQuarter(yearCard) {
+      const quartersDiv = yearCard.querySelector('.sales-quarters');
       const qi = quartersDiv.children.length;
-      const qDiv = document.createElement('div');
-      qDiv.className = 'item-group';
-      qDiv.style.cssText = 'background:#fff;margin-bottom:12px';
-      qDiv.dataset.qi = qi;
-      qDiv.innerHTML = `
-        <div class="item-group__header">
-          <input class="form-input sq-label" value="" style="width:160px" placeholder="例: 1月〜3月">
-          <button class="btn-remove" onclick="this.closest('[data-qi]').remove()">四半期を削除</button>
-        </div>
-        <div class="sales-rows"></div>
-        <button class="btn-add" onclick="addSalesRow(this)" style="margin-top:8px">＋ 行を追加</button>
-      `;
-      quartersDiv.appendChild(qDiv);
+      const qDiv = buildQuarterCard({ label: '', rows: [] }, qi, true);
+      quartersDiv.prepend(qDiv);
     }
 
-    function addSalesRow(btn) {
-      const rowsDiv = btn.previousElementSibling;
+    function addSalesRow(quarterCard) {
+      const rowsDiv = quarterCard.querySelector('.sales-rows');
       const row = document.createElement('div');
       row.className = 'item-row sales-row';
       row.innerHTML = `
@@ -1307,9 +1368,9 @@
 
     function collectSales() {
       const years = [];
-      document.querySelectorAll('#sales-years > [data-year-idx]').forEach(yearDiv => {
+      document.querySelectorAll('#sales-years > .sales-year-card').forEach(yearDiv => {
         const quarters = [];
-        yearDiv.querySelectorAll('[data-qi]').forEach(qDiv => {
+        yearDiv.querySelectorAll('.sales-quarter-card').forEach(qDiv => {
           const rows = [];
           qDiv.querySelectorAll('.sales-row').forEach(rowDiv => {
             rows.push({
