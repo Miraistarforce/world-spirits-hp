@@ -1,9 +1,32 @@
-const { createClient } = require('@libsql/client/web');
-
-const client = createClient({
-  url: process.env.TURSO_DATABASE_URL,
-  authToken: process.env.TURSO_AUTH_TOKEN,
-});
+// Turso HTTP API helper
+async function tursoQuery(sql, args) {
+  const url = process.env.TURSO_DATABASE_URL.replace('libsql://', 'https://');
+  const body = {
+    requests: [
+      { type: 'execute', stmt: { sql, args: (args || []).map(a => ({ type: 'text', value: String(a) })) } },
+      { type: 'close' }
+    ]
+  };
+  const resp = await fetch(url + '/v2/pipeline', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + process.env.TURSO_AUTH_TOKEN,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  if (!resp.ok) throw new Error('Turso error: ' + resp.status);
+  const data = await resp.json();
+  const result = data.results && data.results[0];
+  if (result && result.type === 'error') throw new Error(result.error.message);
+  if (!result || !result.response || !result.response.result) return [];
+  const cols = result.response.result.cols.map(c => c.name);
+  return result.response.result.rows.map(row => {
+    const obj = {};
+    row.forEach((cell, i) => { obj[cols[i]] = cell.value; });
+    return obj;
+  });
+}
 
 function checkAuth(req) {
   const auth = req.headers.authorization || '';
@@ -18,29 +41,25 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // GET: public - return all content
     if (req.method === 'GET') {
-      const result = await client.execute('SELECT section_id, content, updated_at FROM ws_content');
-      const rows = result.rows.map(row => ({
+      const rows = await tursoQuery('SELECT section_id, content, updated_at FROM ws_content');
+      const result = rows.map(row => ({
         section_id: row.section_id,
-        content: typeof row.content === 'string' ? JSON.parse(row.content) : row.content,
+        content: JSON.parse(row.content || '{}'),
         updated_at: row.updated_at
       }));
-      return res.status(200).json(rows);
+      return res.status(200).json(result);
     }
 
-    // PUT: requires auth - upsert content
     if (req.method === 'PUT') {
       if (!checkAuth(req)) return res.status(401).json({ error: 'Unauthorized' });
-
       const { section_id, content } = req.body || {};
       if (!section_id) return res.status(400).json({ error: 'section_id required' });
 
-      await client.execute({
-        sql: "INSERT INTO ws_content (section_id, content, updated_at) VALUES (?, ?, datetime('now')) ON CONFLICT(section_id) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at",
-        args: [section_id, JSON.stringify(content)]
-      });
-
+      await tursoQuery(
+        "INSERT INTO ws_content (section_id, content, updated_at) VALUES (?, ?, datetime('now')) ON CONFLICT(section_id) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at",
+        [section_id, JSON.stringify(content)]
+      );
       return res.status(200).json({ ok: true });
     }
 
