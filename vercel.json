@@ -1,5 +1,13 @@
 {
   "rewrites": [
     { "source": "/admin", "destination": "/admin.html" }
-  ]
+  ],
+  "functions": {
+    "api/upload.js": {
+      "maxDuration": 30
+    },
+    "api/content.js": {
+      "maxDuration": 10
+    }
+  }
 }

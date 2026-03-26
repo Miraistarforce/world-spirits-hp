@@ -485,25 +485,48 @@
     // ==========================================
     // Image Upload
     // ==========================================
-    async function uploadImage(file) {
+    // 画像を圧縮（最大1200px幅、JPEG 80%品質）してからアップロード
+    // 6MBの元画像でも圧縮後は数百KB程度になる
+    function compressImage(file, maxWidth, quality) {
+      maxWidth = maxWidth || 1200;
+      quality = quality || 0.8;
       return new Promise(function(resolve, reject) {
-        var reader = new FileReader();
-        reader.onload = async function() {
-          try {
-            var base64 = reader.result.split(',')[1];
-            var resp = await fetch('/api/upload', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() },
-              body: JSON.stringify({ filename: file.name, contentType: file.type, data: base64 })
-            });
-            if (!resp.ok) throw new Error('Upload failed');
-            var result = await resp.json();
-            resolve(result.url);
-          } catch (e) { reject(e); }
+        var img = new Image();
+        img.onload = function() {
+          var w = img.width, h = img.height;
+          if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+          var canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob(function(blob) {
+            if (!blob) return reject(new Error('圧縮に失敗'));
+            var reader = new FileReader();
+            reader.onload = function() { resolve(reader.result.split(',')[1]); };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          }, 'image/jpeg', quality);
         };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+        img.onerror = function() { reject(new Error('画像の読み込みに失敗')); };
+        img.src = URL.createObjectURL(file);
       });
+    }
+
+    async function uploadImage(file) {
+      if (file.size > 6 * 1024 * 1024) {
+        throw new Error('画像は6MB以下にしてください（現在: ' + (file.size / 1024 / 1024).toFixed(1) + 'MB）');
+      }
+      var base64 = await compressImage(file);
+      var resp = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() },
+        body: JSON.stringify({ filename: file.name, contentType: 'image/jpeg', data: base64 })
+      });
+      if (!resp.ok) {
+        var err = await resp.json().catch(function() { return {}; });
+        throw new Error(err.error || 'アップロードに失敗');
+      }
+      var result = await resp.json();
+      return result.url;
     }
 
     function setupImageUpload(container, currentSrc, onUpload) {
