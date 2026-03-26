@@ -214,15 +214,15 @@
     // Section Definitions
     // ==========================================
     const SECTIONS = [
-      { id: 'message', label: 'Message & Vision', desc: 'メッセージ文、ビジョンカード' },
-      { id: 'about', label: 'About', desc: 'タイトル、サブタイトル、リード文、本文', menuHref: '#about' },
-      { id: 'service', label: 'Products', desc: '商品の強み 3つのアイテム', menuHref: '#service' },
-      { id: 'sales', label: 'Sales Record', desc: '売上実績データ', menuHref: '#sales' },
-      { id: 'works', label: 'Works', desc: '店舗・商品紹介スライド', menuHref: '#works' },
-      { id: 'clients', label: 'Clients', desc: '主要お取引先一覧', menuHref: '#clients' },
-      { id: 'company', label: 'Company', desc: '会社概要テーブル', menuHref: '#company' },
-      { id: 'blog', label: 'Blog', desc: 'ブログ記事の作成・編集' },
-      { id: 'news', label: 'News', desc: 'ニュース・お知らせの作成・編集' },
+      { id: 'blog', label: 'Blog', desc: 'ブログ記事の作成・編集', group: 'content' },
+      { id: 'news', label: 'News', desc: 'ニュース・お知らせの作成・編集', group: 'content' },
+      { id: 'message', label: 'Message & Vision', desc: 'メッセージ文、ビジョンカード', group: 'site' },
+      { id: 'about', label: 'About', desc: 'タイトル、サブタイトル、リード文、本文', menuHref: '#about', group: 'site' },
+      { id: 'service', label: 'Products', desc: '商品の強み 3つのアイテム', menuHref: '#service', group: 'site' },
+      { id: 'sales', label: 'Sales Record', desc: '売上実績データ', menuHref: '#sales', group: 'site' },
+      { id: 'works', label: 'Works', desc: '店舗・商品紹介スライド', menuHref: '#works', group: 'site' },
+      { id: 'clients', label: 'Clients', desc: '主要お取引先一覧', menuHref: '#clients', group: 'site' },
+      { id: 'company', label: 'Company', desc: '会社概要テーブル', menuHref: '#company', group: 'site' },
     ];
 
     // Quill instances storage
@@ -230,7 +230,7 @@
     // Current content from Supabase
     let allContent = {};
     // Current active section
-    let activeSection = 'message';
+    let activeSection = 'blog';
 
     // ==========================================
     // Default Content (matches current site HTML)
@@ -441,7 +441,14 @@
 
       // Build sidebar
       const nav = document.getElementById('sidebarNav');
+      let prevGroup = null;
       SECTIONS.forEach((sec, i) => {
+        if (prevGroup && sec.group !== prevGroup) {
+          const divider = document.createElement('div');
+          divider.style.cssText = 'border-top:1px solid #e5e7eb;margin:8px 0';
+          nav.appendChild(divider);
+        }
+        prevGroup = sec.group;
         const link = document.createElement('div');
         link.className = 'sidebar__link' + (i === 0 ? ' is-active' : '');
         link.dataset.section = sec.id;
@@ -454,7 +461,7 @@
       const container = document.getElementById('panelContainer');
       SECTIONS.forEach(sec => {
         const panel = document.createElement('div');
-        panel.className = 'panel' + (sec.id === 'message' ? ' is-active' : '');
+        panel.className = 'panel' + (sec.id === 'blog' ? ' is-active' : '');
         panel.id = 'panel-' + sec.id;
         container.appendChild(panel);
       });
@@ -466,7 +473,7 @@
       SECTIONS.forEach(sec => renderPanel(sec.id));
 
       // Set initial header
-      updateHeader('message');
+      updateHeader('blog');
     }
 
     function getSectionIcon(id) {
