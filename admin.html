@@ -736,6 +736,8 @@
         <button class="btn-save" onclick="saveSection('sales')">保存する</button>
       `;
       renderSalesYears(c.years || []);
+      bindAllAmountFormats();
+      bindAllMonthFormats();
     }
 
     function renderSalesYears(years) {
@@ -876,7 +878,44 @@
         <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
       `;
       rowsDiv.prepend(row);
+      bindAmountFormat(row.querySelector('.sr-amount'));
+      bindMonthFormat(row.querySelector('.sr-month'));
       row.querySelector('.sr-month').focus();
+    }
+
+    // 金額フォーマット: どんな入力でも "1,000,000円" 形式にする
+    function formatAmount(val) {
+      var num = String(val).replace(/[^0-9]/g, '');
+      if (!num) return '';
+      return Number(num).toLocaleString() + '円';
+    }
+
+    function bindAmountFormat(input) {
+      input.addEventListener('blur', function() {
+        if (this.value.trim()) this.value = formatAmount(this.value);
+      });
+    }
+
+    // 月フォーマット: "12" → "12月"
+    function formatMonth(val) {
+      var num = String(val).replace(/[^0-9]/g, '');
+      if (!num) return '';
+      return num + '月';
+    }
+
+    function bindMonthFormat(input) {
+      input.addEventListener('blur', function() {
+        if (this.value.trim()) this.value = formatMonth(this.value);
+      });
+    }
+
+    // 既存フィールドにバインド
+    function bindAllAmountFormats() {
+      document.querySelectorAll('.sr-amount').forEach(bindAmountFormat);
+    }
+
+    function bindAllMonthFormats() {
+      document.querySelectorAll('.sr-month').forEach(bindMonthFormat);
     }
 
     // ----- Works -----
@@ -1305,11 +1344,18 @@
         yearDiv.querySelectorAll('.sales-quarter-card').forEach(qDiv => {
           const rows = [];
           qDiv.querySelectorAll('.sales-row').forEach(rowDiv => {
-            rows.push({
-              month: rowDiv.querySelector('.sr-month').value,
-              store: rowDiv.querySelector('.sr-store').value,
-              amount: rowDiv.querySelector('.sr-amount').value
-            });
+            var mv = rowDiv.querySelector('.sr-month').value;
+            var sv = rowDiv.querySelector('.sr-store').value;
+            var av = rowDiv.querySelector('.sr-amount').value;
+            if (mv.trim()) mv = formatMonth(mv);
+            if (av.trim()) av = formatAmount(av);
+            rows.push({ month: mv, store: sv, amount: av });
+          });
+          // 新しい月が上に来るようソート
+          rows.sort(function(a, b) {
+            var na = parseInt(a.month) || 0;
+            var nb = parseInt(b.month) || 0;
+            return nb - na;
           });
           quarters.push({ label: qDiv.querySelector('.sq-label').value, rows });
         });
