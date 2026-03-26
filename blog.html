@@ -431,9 +431,12 @@
     }
 
     .p-blog-detail__content img {
-      width: 100%;
+      display: block;
+      max-width: 100%;
+      width: auto;
+      height: auto;
       border-radius: 6px;
-      margin: 24px 0;
+      margin: 24px auto;
     }
 
     .p-blog-detail__content ul {
@@ -910,6 +913,81 @@
     })();
   </script>
   <script src="menu-loader.js"></script>
+  <script>
+  // ブログコンテンツローダー
+  (function() {
+    var CONFIG = window.SITE_CONFIG;
+    if (!CONFIG) return;
+    var IS_TEST = CONFIG.TEST_MODE === true;
+
+    async function loadBlog() {
+      var content = null;
+      if (IS_TEST) {
+        try {
+          var stored = JSON.parse(localStorage.getItem('ws_admin_content') || '{}');
+          if (stored.blog) content = stored.blog.content;
+        } catch(e) {}
+      } else if (CONFIG.SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+        try {
+          var sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+          var { data } = await sb.from('site_content').select('content').eq('section_id', 'blog').single();
+          if (data) content = data.content;
+        } catch(e) {}
+      }
+      if (!content || !content.articles || content.articles.length === 0) return;
+
+      var articles = content.articles;
+      // カード一覧を再生成
+      var grid = document.querySelector('.p-blog-list__grid');
+      if (grid) {
+        grid.innerHTML = '';
+        articles.forEach(function(a, i) {
+          var card = document.createElement('a');
+          card.className = 'p-blog-card';
+          card.href = '#';
+          card.onclick = function(e) { showDetail(i, e); };
+          card.innerHTML =
+            '<div class="p-blog-card__image"><img src="' + escA(a.heroImage || '') + '" alt="' + escA(a.title || '') + '"></div>' +
+            '<div class="p-blog-card__body">' +
+            '<div class="p-blog-card__meta"><span class="p-blog-card__date">' + esc(a.date) + '</span><span class="p-blog-card__tag">' + esc(a.tag) + '</span></div>' +
+            '<h2 class="p-blog-card__title">' + esc(a.title) + '</h2>' +
+            '<p class="p-blog-card__excerpt">' + esc(a.excerpt || stripHtml(a.content).slice(0, 100)) + '</p>' +
+            '</div>';
+          grid.appendChild(card);
+        });
+      }
+
+      // 詳細記事を再生成
+      // まず既存のarticleを全て削除
+      document.querySelectorAll('.p-blog-detail').forEach(function(el) { el.remove(); });
+      var footer = document.querySelector('.g-footer');
+      articles.forEach(function(a, i) {
+        var article = document.createElement('article');
+        article.className = 'p-blog-detail';
+        article.id = 'blogDetail' + i;
+        article.innerHTML =
+          '<div class="p-blog-detail__back" onclick="backToList()">' +
+          '<svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> 記事一覧に戻る</div>' +
+          '<div class="p-blog-detail__meta"><span class="p-blog-detail__date">' + esc(a.date) + '</span><span class="p-blog-detail__tag">' + esc(a.tag) + '</span></div>' +
+          '<h1 class="p-blog-detail__title">' + esc(a.title) + '</h1>' +
+          (a.heroImage ? '<img class="p-blog-detail__hero-image" src="' + escA(a.heroImage) + '" alt="' + escA(a.title) + '">' : '') +
+          '<div class="p-blog-detail__content">' + a.content + '</div>' +
+          '<div class="p-blog-detail__share"><span class="p-blog-detail__share-label">SHARE</span></div>';
+        footer.parentNode.insertBefore(article, footer);
+      });
+    }
+
+    function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+    function escA(s) { return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+    function stripHtml(s) { var d = document.createElement('div'); d.innerHTML = s || ''; return d.textContent || ''; }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadBlog);
+    } else {
+      loadBlog();
+    }
+  })();
+  </script>
 
 </body>
 </html>

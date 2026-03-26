@@ -48,6 +48,7 @@
       if (content.works) applyWorks(content.works);
       if (content.clients) applyClients(content.clients);
       if (content.company) applyCompany(content.company);
+      if (content.news) applyHomeNews(content.news);
 
       // メニュー・フッター更新
       updateMenus(content);
@@ -240,6 +241,27 @@
         });
       }
     }
+  }
+
+  // ===== Home News Update =====
+
+  function applyHomeNews(c) {
+    if (!c.items || c.items.length === 0) return;
+    var list = document.querySelector('.c-news-list');
+    if (!list) return;
+    list.innerHTML = '';
+    // 最新3件のみ表示
+    c.items.slice(0, 3).forEach(function(item) {
+      var li = document.createElement('li');
+      li.className = 'c-news-list__item';
+      li.innerHTML =
+        '<a class="c-news-list__link" href="news.html">' +
+        '<div class="c-news-list__head"><time class="c-news-list__date">' + escHtml(item.date) + '</time>' +
+        '<span class="c-news-list__category">' + escHtml(item.category) + '</span></div>' +
+        '<div class="c-news-list__body"><h3 class="c-news-list__title">' + escHtml(item.title) + '</h3>' +
+        '<span class="c-news-list__dot"></span></div></a>';
+      list.appendChild(li);
+    });
   }
 
   // ===== Menu Update =====

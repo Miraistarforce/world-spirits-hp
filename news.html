@@ -962,6 +962,104 @@
     })();
   </script>
   <script src="menu-loader.js"></script>
+  <script>
+  // ニュースコンテンツローダー
+  (function() {
+    var CONFIG = window.SITE_CONFIG;
+    if (!CONFIG) return;
+    var IS_TEST = CONFIG.TEST_MODE === true;
+
+    async function loadNews() {
+      var content = null;
+      if (IS_TEST) {
+        try {
+          var stored = JSON.parse(localStorage.getItem('ws_admin_content') || '{}');
+          if (stored.news) content = stored.news.content;
+        } catch(e) {}
+      } else if (CONFIG.SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+        try {
+          var sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+          var { data } = await sb.from('site_content').select('content').eq('section_id', 'news').single();
+          if (data) content = data.content;
+        } catch(e) {}
+      }
+      if (!content || !content.items || content.items.length === 0) return;
+
+      var items = content.items;
+      // フィルターカテゴリを動的に生成
+      var categories = [];
+      items.forEach(function(item) {
+        if (item.category && categories.indexOf(item.category) === -1) categories.push(item.category);
+      });
+      var filterEl = document.getElementById('newsFilter');
+      if (filterEl) {
+        filterEl.innerHTML = '<button class="p-news-filter__btn is-active" data-filter="all">すべて</button>';
+        categories.forEach(function(cat) {
+          filterEl.innerHTML += '<button class="p-news-filter__btn" data-filter="' + escA(cat) + '">' + esc(cat) + '</button>';
+        });
+        // Re-bind filter events
+        filterEl.querySelectorAll('.p-news-filter__btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            filterEl.querySelectorAll('.p-news-filter__btn').forEach(function(b) { b.classList.remove('is-active'); });
+            btn.classList.add('is-active');
+            var filter = btn.dataset.filter;
+            document.querySelectorAll('.p-news-item').forEach(function(item) {
+              if (filter === 'all' || item.dataset.category === filter) {
+                item.style.display = '';
+              } else {
+                item.style.display = 'none';
+              }
+            });
+          });
+        });
+      }
+
+      // ニュース一覧を再生成
+      var list = document.getElementById('newsList');
+      if (list) {
+        list.innerHTML = '';
+        items.forEach(function(item, i) {
+          var a = document.createElement('a');
+          a.className = 'p-news-item';
+          a.href = '#';
+          a.dataset.category = item.category || '';
+          a.onclick = function(e) { showNewsDetail(i, e); };
+          a.innerHTML =
+            '<span class="p-news-item__date">' + esc(item.date) + '</span>' +
+            '<span class="p-news-item__category">' + esc(item.category) + '</span>' +
+            '<span class="p-news-item__title">' + esc(item.title) + '</span>' +
+            '<span class="p-news-item__arrow"><svg viewBox="0 0 24 24"><polyline points="9,6 15,12 9,18"/></svg></span>';
+          list.appendChild(a);
+        });
+      }
+
+      // 詳細記事を再生成
+      document.querySelectorAll('.p-news-detail').forEach(function(el) { el.remove(); });
+      var footer = document.querySelector('.g-footer');
+      items.forEach(function(item, i) {
+        var article = document.createElement('article');
+        article.className = 'p-news-detail';
+        article.id = 'newsDetail' + i;
+        article.innerHTML =
+          '<div class="p-news-detail__back" onclick="backToNewsList()">' +
+          '<svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> 一覧に戻る</div>' +
+          '<div class="p-news-detail__meta"><span class="p-news-detail__date">' + esc(item.date) + '</span><span class="p-news-detail__tag">' + esc(item.category) + '</span></div>' +
+          '<h1 class="p-news-detail__title">' + esc(item.title) + '</h1>' +
+          '<div class="p-news-detail__content">' + item.content + '</div>';
+        footer.parentNode.insertBefore(article, footer);
+      });
+    }
+
+    function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+    function escA(s) { return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadNews);
+    } else {
+      loadNews();
+    }
+  })();
+  </script>
 
 </body>
 </html>

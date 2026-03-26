@@ -205,6 +205,8 @@
       { id: 'works', label: 'Works', desc: '店舗・商品紹介スライド', menuHref: '#works' },
       { id: 'clients', label: 'Clients', desc: '主要お取引先一覧', menuHref: '#clients' },
       { id: 'company', label: 'Company', desc: '会社概要テーブル', menuHref: '#company' },
+      { id: 'blog', label: 'Blog', desc: 'ブログ記事の作成・編集' },
+      { id: 'news', label: 'News', desc: 'ニュース・お知らせの作成・編集' },
     ];
 
     // Quill instances storage
@@ -334,7 +336,9 @@
           { label: '設立', value: '平成20年5月' },
           { label: '事業内容', value: 'ファッション雑貨・ジュエリー等の企画・販売' }
         ]
-      }
+      },
+      blog: { articles: [] },
+      news: { items: [] }
     };
 
     // ==========================================
@@ -450,7 +454,7 @@
     }
 
     function getSectionIcon(id) {
-      const icons = { message: '&#9993;', about: '&#9998;', service: '&#9733;', sales: '&#9776;', works: '&#9783;', clients: '&#9734;', company: '&#9962;' };
+      const icons = { message: '&#9993;', about: '&#9998;', service: '&#9733;', sales: '&#9776;', works: '&#9783;', clients: '&#9734;', company: '&#9962;', blog: '&#9997;', news: '&#9888;' };
       return icons[id] || '&#9679;';
     }
 
@@ -568,6 +572,8 @@
         case 'works': renderWorks(panel, content); break;
         case 'clients': renderClients(panel, content); break;
         case 'company': renderCompany(panel, content); break;
+        case 'blog': renderBlog(panel, content); break;
+        case 'news': renderNews(panel, content); break;
       }
     }
 
@@ -1079,6 +1085,157 @@
       addCompanyItem(document.getElementById('company-rows'), '', '');
     }
 
+    // ----- Blog -----
+    function renderBlog(panel, c) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">ブログ記事一覧</h3>
+          <div id="blog-articles"></div>
+          <button class="btn-add" onclick="addBlogArticle()" style="margin-top:16px">＋ 新しい記事を追加</button>
+        </div>
+        <button class="btn-save" onclick="saveSection('blog')">保存する</button>
+      `;
+      var container = document.getElementById('blog-articles');
+      (c.articles || []).forEach(function(article, i) {
+        addBlogArticleEl(container, article, i);
+      });
+    }
+
+    function addBlogArticleEl(container, article, idx) {
+      var div = document.createElement('div');
+      div.className = 'item-group blog-article-item';
+      var editorId = 'blog-editor-' + Date.now() + '-' + idx;
+      div.innerHTML = `
+        <div class="item-group__header">
+          <span class="item-group__title">記事 ${idx + 1}</span>
+          <button class="btn-remove" onclick="this.closest('.blog-article-item').remove()">記事を削除</button>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">日付（YYYY.MM.DD）</label>
+            <input class="form-input ba-date" value="${esc(article.date || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">カテゴリ</label>
+            <input class="form-input ba-tag" value="${esc(article.tag || '')}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">タイトル</label>
+          <input class="form-input ba-title" value="${esc(article.title || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">サムネイル画像</label>
+          <div class="ba-thumb"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">抜粋（一覧表示用・省略可）</label>
+          <input class="form-input ba-excerpt" value="${esc(article.excerpt || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">本文</label>
+          <small class="form-hint" style="margin-bottom:8px">太字・見出し・リスト・画像挿入が使えます。画像は自動で中央揃え・適切なサイズになります。</small>
+          <div class="ba-content-editor" id="${editorId}"></div>
+        </div>
+      `;
+      container.appendChild(div);
+
+      // Image upload
+      setupImageUpload(div.querySelector('.ba-thumb'), article.heroImage || '', function() {});
+
+      // Quill editor
+      var q = new Quill('#' + editorId, {
+        theme: 'snow',
+        placeholder: '記事の本文を入力...',
+        modules: {
+          toolbar: [
+            [{ header: [2, 3, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+          ]
+        }
+      });
+      q.root.innerHTML = article.content || '';
+      div._quill = q;
+    }
+
+    function addBlogArticle() {
+      var container = document.getElementById('blog-articles');
+      var idx = container.children.length;
+      addBlogArticleEl(container, { date: '', tag: '', title: '', heroImage: '', excerpt: '', content: '' }, idx);
+    }
+
+    // ----- News -----
+    function renderNews(panel, c) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">ニュース一覧</h3>
+          <div id="news-items"></div>
+          <button class="btn-add" onclick="addNewsItem()" style="margin-top:16px">＋ 新しいニュースを追加</button>
+        </div>
+        <button class="btn-save" onclick="saveSection('news')">保存する</button>
+      `;
+      var container = document.getElementById('news-items');
+      (c.items || []).forEach(function(item, i) {
+        addNewsItemEl(container, item, i);
+      });
+    }
+
+    function addNewsItemEl(container, item, idx) {
+      var div = document.createElement('div');
+      div.className = 'item-group news-item-entry';
+      var editorId = 'news-editor-' + Date.now() + '-' + idx;
+      div.innerHTML = `
+        <div class="item-group__header">
+          <span class="item-group__title">ニュース ${idx + 1}</span>
+          <button class="btn-remove" onclick="this.closest('.news-item-entry').remove()">削除</button>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">日付（YYYY.MM.DD）</label>
+            <input class="form-input ni-date" value="${esc(item.date || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">カテゴリ</label>
+            <input class="form-input ni-category" value="${esc(item.category || '')}" placeholder="お知らせ / イベント / 採用">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">タイトル</label>
+          <input class="form-input ni-title" value="${esc(item.title || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">本文</label>
+          <div class="ni-content-editor" id="${editorId}"></div>
+        </div>
+      `;
+      container.appendChild(div);
+
+      var q = new Quill('#' + editorId, {
+        theme: 'snow',
+        placeholder: 'ニュースの本文を入力...',
+        modules: {
+          toolbar: [
+            [{ header: [3, false] }],
+            ['bold', 'italic'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link'],
+            ['clean']
+          ]
+        }
+      });
+      q.root.innerHTML = item.content || '';
+      div._quill = q;
+    }
+
+    function addNewsItem() {
+      var container = document.getElementById('news-items');
+      var idx = container.children.length;
+      addNewsItemEl(container, { date: '', category: '', title: '', content: '' }, idx);
+    }
+
     // ==========================================
     // Content Collectors
     // ==========================================
@@ -1091,6 +1248,8 @@
         case 'works': return collectWorks();
         case 'clients': return collectClients();
         case 'company': return collectCompany();
+        case 'blog': return collectBlog();
+        case 'news': return collectNews();
       }
       return {};
     }
@@ -1219,6 +1378,35 @@
         menuTitle: document.getElementById('company-menuTitle').value,
         rows
       };
+    }
+
+    function collectBlog() {
+      const articles = [];
+      document.querySelectorAll('.blog-article-item').forEach(div => {
+        const imgEl = div.querySelector('.img-upload__preview');
+        articles.push({
+          date: div.querySelector('.ba-date').value,
+          tag: div.querySelector('.ba-tag').value,
+          title: div.querySelector('.ba-title').value,
+          heroImage: imgEl ? imgEl.src : '',
+          excerpt: div.querySelector('.ba-excerpt').value,
+          content: div._quill ? div._quill.root.innerHTML : ''
+        });
+      });
+      return { articles };
+    }
+
+    function collectNews() {
+      const items = [];
+      document.querySelectorAll('.news-item-entry').forEach(div => {
+        items.push({
+          date: div.querySelector('.ni-date').value,
+          category: div.querySelector('.ni-category').value,
+          title: div.querySelector('.ni-title').value,
+          content: div._quill ? div._quill.root.innerHTML : ''
+        });
+      });
+      return { items };
     }
 
     // ==========================================
