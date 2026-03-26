@@ -875,7 +875,8 @@
         <input class="form-input sr-amount" value="" placeholder="売上金額" style="width:180px;flex:none">
         <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
       `;
-      rowsDiv.appendChild(row);
+      rowsDiv.prepend(row);
+      row.querySelector('.sr-month').focus();
     }
 
     // ----- Works -----
