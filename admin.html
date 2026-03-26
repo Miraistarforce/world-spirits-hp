@@ -214,7 +214,7 @@
     // Section Definitions
     // ==========================================
     const SECTIONS = [
-      { id: 'message', label: 'Message & Vision', desc: 'メッセージ文、Our Visionテキスト、ビジョンカード' },
+      { id: 'message', label: 'Message & Vision', desc: 'メッセージ文、ビジョンカード' },
       { id: 'about', label: 'About', desc: 'タイトル、サブタイトル、リード文、本文', menuHref: '#about' },
       { id: 'service', label: 'Products', desc: '商品の強み 3つのアイテム', menuHref: '#service' },
       { id: 'sales', label: 'Sales Record', desc: '売上実績データ', menuHref: '#sales' },
@@ -601,33 +601,6 @@
           <div class="form-group">
             <label class="form-label">メッセージ（1行ずつ改行で区切ってください）</label>
             <textarea class="form-textarea" id="msg-lines" rows="6">${(c.lines || []).join('\n')}</textarea>
-          </div>
-        </div>
-        <div class="card">
-          <h3 class="card__title">Our Vision</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Visionテキスト</label>
-              <input class="form-input" id="msg-visionText" value="${esc(c.visionText || '')}">
-            </div>
-            <div class="form-group">
-              <label class="form-label">背景テキスト</label>
-              <input class="form-input" id="msg-bgText" value="${esc(c.bgText || c.visionText || '')}">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">カウントラベル</label>
-            <input class="form-input" id="msg-countLabel" value="${esc(c.countLabel || '')}">
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">カウント数字</label>
-              <input class="form-input" id="msg-countNumber" value="${esc(c.countNumber || '')}">
-            </div>
-            <div class="form-group">
-              <label class="form-label">カウントテキスト</label>
-              <input class="form-input" id="msg-countText" value="${esc(c.countText || '')}">
-            </div>
           </div>
         </div>
         <div class="card">
