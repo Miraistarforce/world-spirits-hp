@@ -737,23 +737,6 @@
     function renderSales(panel, c) {
       panel.innerHTML = `
         <div class="card">
-          <h3 class="card__title">基本設定</h3>
-          <div class="form-group">
-            <label class="form-label">メニュー表示名</label>
-            <input class="form-input" id="sales-menuTitle" value="${esc(c.menuTitle || '')}">
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">タイトル（英語）</label>
-              <input class="form-input" id="sales-title" value="${esc(c.title || '')}">
-            </div>
-            <div class="form-group">
-              <label class="form-label">サブタイトル（日本語）</label>
-              <input class="form-input" id="sales-subtitle" value="${esc(c.subtitle || '')}">
-            </div>
-          </div>
-        </div>
-        <div class="card">
           <h3 class="card__title">売上データ</h3>
           <button class="btn-add" onclick="addSalesYear()" style="margin-bottom:16px">＋ 新しい年を追加</button>
           <div id="sales-years"></div>
@@ -1459,9 +1442,9 @@
         years.push({ year: yearDiv.querySelector('.sy-year').value, quarters });
       });
       return {
-        title: document.getElementById('sales-title').value,
-        subtitle: document.getElementById('sales-subtitle').value,
-        menuTitle: document.getElementById('sales-menuTitle').value,
+        title: 'Sales Record',
+        subtitle: '売上実績',
+        menuTitle: 'Sales Record',
         years
       };
     }
