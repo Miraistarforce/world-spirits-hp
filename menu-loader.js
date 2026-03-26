@@ -5,11 +5,6 @@
 (function() {
   'use strict';
 
-  var CONFIG = window.SITE_CONFIG;
-  if (!CONFIG || CONFIG.SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
-
-  var sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
-
   var MENU_MAP = {
     about: 'index.html#about',
     service: 'index.html#service',
@@ -21,8 +16,9 @@
 
   async function updateMenus() {
     try {
-      var { data, error } = await sb.from('site_content').select('section_id, content');
-      if (error || !data) return;
+      var resp = await fetch('/api/content');
+      if (!resp.ok) return;
+      var data = await resp.json();
 
       data.forEach(function(row) {
         var href = MENU_MAP[row.section_id];
