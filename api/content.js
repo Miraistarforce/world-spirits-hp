@@ -1,4 +1,4 @@
-const { createClient } = require('@libsql/client');
+const { createClient } = require('@libsql/client/web');
 
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL,
