@@ -196,15 +196,16 @@
     // Section Definitions
     // ==========================================
     const SECTIONS = [
-      { id: 'blog', label: 'Blog', desc: 'ブログ記事の作成・編集', group: 'content' },
-      { id: 'news', label: 'News', desc: 'ニュース・お知らせの作成・編集', group: 'content' },
+      { id: 'blog', label: 'ブログ', desc: 'ブログ記事の作成・編集', group: 'content' },
+      { id: 'news', label: 'ニュース', desc: 'ニュース・お知らせの作成・編集', group: 'content' },
+      { id: 'sales', label: '売上実績', desc: '売上実績データ', menuHref: '#sales', group: 'content' },
       { id: 'message', label: 'Message & Vision', desc: 'メッセージ文、ビジョンカード', group: 'site' },
       { id: 'about', label: 'About', desc: 'タイトル、サブタイトル、リード文、本文', menuHref: '#about', group: 'site' },
       { id: 'service', label: 'Products', desc: '商品の強み 3つのアイテム', menuHref: '#service', group: 'site' },
-      { id: 'sales', label: 'Sales Record', desc: '売上実績データ', menuHref: '#sales', group: 'site' },
       { id: 'works', label: 'Works', desc: '店舗・商品紹介スライド', menuHref: '#works', group: 'site' },
       { id: 'clients', label: 'Clients', desc: '主要お取引先一覧', menuHref: '#clients', group: 'site' },
       { id: 'company', label: 'Company', desc: '会社概要テーブル', menuHref: '#company', group: 'site' },
+      { id: 'settings', label: '設定', desc: 'ログイン情報の変更', group: 'settings' },
     ];
 
     // Quill instances storage
@@ -437,7 +438,7 @@
     }
 
     function getSectionIcon(id) {
-      const icons = { message: '&#9993;', about: '&#9998;', service: '&#9733;', sales: '&#9776;', works: '&#9783;', clients: '&#9734;', company: '&#9962;', blog: '&#9997;', news: '&#9888;' };
+      const icons = { message: '&#9993;', about: '&#9998;', service: '&#9733;', sales: '&#9776;', works: '&#9783;', clients: '&#9734;', company: '&#9962;', blog: '&#9997;', news: '&#9888;', settings: '&#9881;' };
       return icons[id] || '&#9679;';
     }
 
@@ -571,6 +572,7 @@
         case 'company': renderCompany(panel, content); break;
         case 'blog': renderBlog(panel, content); break;
         case 'news': renderNews(panel, content); break;
+        case 'settings': renderSettings(panel); break;
       }
     }
 
@@ -1289,6 +1291,78 @@
       var container = document.getElementById('news-items');
       var idx = container.children.length;
       addNewsItemEl(container, { date: '', category: '', title: '', content: '' }, idx);
+    }
+
+    // ----- Settings -----
+    function renderSettings(panel) {
+      panel.innerHTML = `
+        <div class="card">
+          <h3 class="card__title">ログイン情報の変更</h3>
+          <div class="form-group">
+            <label class="form-label">新しいメールアドレス</label>
+            <input class="form-input" id="settings-email" type="email" placeholder="新しいメールアドレス">
+          </div>
+          <div class="form-group">
+            <label class="form-label">新しいパスワード</label>
+            <input class="form-input" id="settings-password" type="password" placeholder="新しいパスワード">
+          </div>
+          <div class="form-group">
+            <label class="form-label">パスワード確認</label>
+            <input class="form-input" id="settings-password-confirm" type="password" placeholder="パスワードをもう一度入力">
+          </div>
+          <p class="form-hint" style="margin-bottom:16px">変更したい項目のみ入力してください。空欄の項目は変更されません。</p>
+          <button class="btn-save" onclick="saveSettings()">変更を保存</button>
+        </div>
+      `;
+    }
+
+    async function saveSettings() {
+      var email = document.getElementById('settings-email').value.trim();
+      var password = document.getElementById('settings-password').value;
+      var passwordConfirm = document.getElementById('settings-password-confirm').value;
+
+      if (!email && !password) {
+        showToast('変更する項目を入力してください', 'error');
+        return;
+      }
+
+      if (password && password !== passwordConfirm) {
+        showToast('パスワードが一致しません', 'error');
+        return;
+      }
+
+      if (password && password.length < 6) {
+        showToast('パスワードは6文字以上にしてください', 'error');
+        return;
+      }
+
+      var overlay = document.getElementById('savingOverlay');
+      overlay.classList.add('is-show');
+
+      try {
+        var body = {};
+        if (email) body.email = email;
+        if (password) body.password = password;
+
+        var resp = await fetch('/api/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() },
+          body: JSON.stringify(body)
+        });
+        if (!resp.ok) {
+          var err = await resp.json().catch(function() { return {}; });
+          throw new Error(err.error || '保存に失敗');
+        }
+
+        document.getElementById('settings-email').value = '';
+        document.getElementById('settings-password').value = '';
+        document.getElementById('settings-password-confirm').value = '';
+        showToast('ログイン情報を変更しました。次回ログイン時から有効です。', 'success');
+      } catch (e) {
+        showToast('保存に失敗しました: ' + e.message, 'error');
+      } finally {
+        overlay.classList.remove('is-show');
+      }
     }
 
     // ==========================================
