@@ -129,11 +129,40 @@
     .saving-spinner { width: 40px; height: 40px; border: 3px solid #fff; border-top-color: #004a99; border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Mobile menu button */
+    .mobile-menu-btn { display: none; position: fixed; top: 12px; left: 12px; z-index: 1001; width: 44px; height: 44px; background: #004a99; color: #fff; border: none; border-radius: 10px; font-size: 22px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); align-items: center; justify-content: center; line-height: 1; }
+    .sidebar__overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; }
+
     /* Responsive */
     @media (max-width: 900px) {
       .dashboard.is-active { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      .main { padding: 20px 16px; }
+      .mobile-menu-btn { display: flex; }
+      .sidebar { display: none; position: fixed; top: 0; left: 0; width: 280px; height: 100vh; z-index: 1000; box-shadow: 4px 0 20px rgba(0,0,0,0.2); }
+      .sidebar.is-open { display: flex; }
+      .sidebar__overlay.is-open { display: block; }
+      .main { padding: 60px 16px 24px; }
+      .main__title { font-size: 18px; }
+      .card { padding: 20px 16px; }
+      .card__title { font-size: 15px; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+      .form-row-3 { grid-template-columns: 1fr; gap: 8px; }
+      .item-row { flex-wrap: wrap; }
+      .item-row .form-input[style*="width:80px"] { width: 100% !important; flex: 1 1 auto !important; }
+      .item-row .form-input[style*="width:180px"] { width: 100% !important; flex: 1 1 auto !important; }
+      .item-row .form-input[style*="width:160px"] { width: 100% !important; flex: 1 1 auto !important; }
+      .sales-row { flex-direction: column; gap: 6px; align-items: stretch; }
+      .sales-row .form-input { width: 100% !important; flex: none !important; }
+      .sales-row .btn-remove { align-self: flex-end; }
+      .sales-year-header { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
+      .sales-q-header { padding: 10px 12px; }
+      .img-upload { flex-direction: column; align-items: flex-start; }
+      .img-upload__preview { width: 100%; height: auto; max-height: 160px; }
+      .btn-save { width: 100%; justify-content: center; }
+      .btn-group { flex-direction: column; }
+      .btn-group .btn-save { width: 100%; }
+      .ql-toolbar.ql-snow { padding: 6px; }
+      .ql-toolbar.ql-snow .ql-formats { margin-right: 8px; }
+      .toast { top: auto; bottom: 16px; left: 16px; right: 16px; text-align: center; }
     }
   </style>
 </head>
@@ -161,7 +190,9 @@
 
   <!-- ===== Dashboard ===== -->
   <div class="dashboard" id="dashboard">
-    <aside class="sidebar">
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">☰</button>
+    <div class="sidebar__overlay" id="sidebarOverlay" onclick="closeMobileMenu()"></div>
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar__header">
         <p class="sidebar__logo">WORLD SPIRITS</p>
         <p class="sidebar__title">管理画面</p>
@@ -1541,6 +1572,7 @@
         panel.classList.toggle('is-active', panel.id === 'panel-' + sectionId);
       });
       updateHeader(sectionId);
+      closeMobileMenu();
     }
 
     function updateHeader(sectionId) {
@@ -1588,6 +1620,16 @@
     // ==========================================
     // Init
     // ==========================================
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById('sidebar').classList.toggle('is-open');
+      document.getElementById('sidebarOverlay').classList.toggle('is-open');
+    }
+    function closeMobileMenu() {
+      document.getElementById('sidebar').classList.remove('is-open');
+      document.getElementById('sidebarOverlay').classList.remove('is-open');
+    }
+
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
     checkSession();
