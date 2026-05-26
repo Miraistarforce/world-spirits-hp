@@ -801,7 +801,7 @@
               <span class="sales-year-count">${(year.quarters || []).reduce((s,q) => s + (q.rows||[]).length, 0)}件</span>
             </div>
             <div style="display:flex;align-items:center;gap:12px">
-              <button class="btn-remove" onclick="event.stopPropagation();if(confirm('この年のデータをすべて削除しますか？'))this.closest('.sales-year-card').remove()" style="font-size:11px">年を削除</button>
+              <button class="btn-remove" onclick="event.stopPropagation();removeSalesYear(this)" style="font-size:11px">年を削除</button>
               <span class="sales-year-arrow">${isFirstYear ? '▲' : '▼'}</span>
             </div>
           </div>
@@ -834,7 +834,7 @@
           <input class="form-input sr-month" value="${esc(row.month)}" placeholder="月" style="width:80px;flex:none">
           <input class="form-input sr-store" value="${esc(row.store)}" placeholder="催事店舗名">
           <input class="form-input sr-amount" value="${esc(row.amount)}" placeholder="売上金額" style="width:180px;flex:none">
-          <button class="btn-remove" onclick="if(confirm('この行を削除しますか？'))this.parentElement.remove()">×</button>
+          <button class="btn-remove" onclick="removeRow(this)">×</button>
         </div>`;
       });
 
@@ -845,7 +845,7 @@
             <input class="form-input sq-label" value="${esc(q.label)}" style="width:140px;font-weight:600;background:transparent;border:none;color:inherit;padding:0" placeholder="例: 1月〜3月" onclick="event.stopPropagation()">
             <span style="font-size:12px;color:#888">(${(q.rows||[]).length}件)</span>
           </div>
-          <button class="btn-remove" onclick="event.stopPropagation();if(confirm('この四半期のデータを削除しますか？'))this.closest('.sales-quarter-card').remove()" style="font-size:11px">削除</button>
+          <button class="btn-remove" onclick="event.stopPropagation();removeSalesQuarter(this)" style="font-size:11px">削除</button>
         </div>
         <div class="sales-q-body" style="${isOpen ? '' : 'display:none'}">
           <div style="padding:8px 0 12px">
@@ -889,7 +889,7 @@
             <span class="sales-year-count">0件</span>
           </div>
           <div style="display:flex;align-items:center;gap:12px">
-            <button class="btn-remove" onclick="event.stopPropagation();if(confirm('この年のデータをすべて削除しますか？'))this.closest('.sales-year-card').remove()" style="font-size:11px">年を削除</button>
+            <button class="btn-remove" onclick="event.stopPropagation();removeSalesYear(this)" style="font-size:11px">年を削除</button>
             <span class="sales-year-arrow">▲</span>
           </div>
         </div>
@@ -918,7 +918,7 @@
         <input class="form-input sr-month" value="" placeholder="月" style="width:80px;flex:none">
         <input class="form-input sr-store" value="" placeholder="催事店舗名">
         <input class="form-input sr-amount" value="" placeholder="売上金額" style="width:180px;flex:none">
-        <button class="btn-remove" onclick="if(confirm('この行を削除しますか？'))this.parentElement.remove()">×</button>
+        <button class="btn-remove" onclick="removeRow(this)">×</button>
       `;
       rowsDiv.prepend(row);
       bindAmountFormat(row.querySelector('.sr-amount'));
@@ -1000,7 +1000,7 @@
         div.innerHTML = `
           <div class="item-group__header">
             <span class="item-group__title">スライド ${i + 1}</span>
-            <button class="btn-remove" onclick="this.closest('.works-slide-item').remove()">削除</button>
+            <button class="btn-remove" onclick="removeEl(this,'.works-slide-item')">削除</button>
           </div>
           <div class="form-group">
             <label class="form-label">画像</label>
@@ -1036,7 +1036,7 @@
       div.innerHTML = `
         <div class="item-group__header">
           <span class="item-group__title">スライド ${i + 1}</span>
-          <button class="btn-remove" onclick="this.closest('.works-slide-item').remove()">削除</button>
+          <button class="btn-remove" onclick="removeEl(this,'.works-slide-item')">削除</button>
         </div>
         <div class="form-group">
           <label class="form-label">画像</label>
@@ -1103,7 +1103,7 @@
       row.className = 'item-row client-row';
       row.innerHTML = `
         <input class="form-input cl-name" value="${esc(name || '')}">
-        <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+        <button class="btn-remove" onclick="removeRow(this)">×</button>
       `;
       container.appendChild(row);
     }
@@ -1151,7 +1151,7 @@
       row.innerHTML = `
         <input class="form-input co-label" value="${esc(label || '')}" placeholder="項目名" style="width:160px;flex:none">
         <input class="form-input co-value" value="${esc(value || '')}" placeholder="内容">
-        <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
+        <button class="btn-remove" onclick="removeRow(this)">×</button>
       `;
       container.appendChild(row);
     }
@@ -1183,7 +1183,7 @@
       div.innerHTML = `
         <div class="item-group__header">
           <span class="item-group__title">記事 ${idx + 1}</span>
-          <button class="btn-remove" onclick="this.closest('.blog-article-item').remove()">記事を削除</button>
+          <button class="btn-remove" onclick="removeEl(this,'.blog-article-item')">記事を削除</button>
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -1261,7 +1261,7 @@
       div.innerHTML = `
         <div class="item-group__header">
           <span class="item-group__title">ニュース ${idx + 1}</span>
-          <button class="btn-remove" onclick="this.closest('.news-item-entry').remove()">削除</button>
+          <button class="btn-remove" onclick="removeEl(this,'.news-item-entry')">削除</button>
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -1621,6 +1621,12 @@
     // ==========================================
     // Init
     // ==========================================
+    // Delete helpers
+    function removeRow(btn) { btn.parentElement.remove(); }
+    function removeEl(btn, sel) { btn.closest(sel).remove(); }
+    function removeSalesYear(btn) { if (confirm('この年のデータをすべて削除しますか？')) btn.closest('.sales-year-card').remove(); }
+    function removeSalesQuarter(btn) { if (confirm('この四半期のデータを削除しますか？')) btn.closest('.sales-quarter-card').remove(); }
+
     // Mobile menu
     function toggleMobileMenu() {
       var open = document.getElementById('sidebar').classList.toggle('is-open');
