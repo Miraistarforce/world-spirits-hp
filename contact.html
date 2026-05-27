@@ -1095,46 +1095,74 @@
     }
 
     function handleSend() {
-      // mailtoリンクを組み立て
-      var to = 'asuki1995@gmail.com';
-      var subject = '【ワールドスピリッツ】お問い合わせ';
-      var lines = [];
-      var fields = [
-        { label: '会社名・団体名', key: 'company' },
-        { label: '部署名', key: 'department' },
-        { label: '氏名', key: 'name' },
-        { label: 'フリガナ', key: 'kana' },
-        { label: '電話番号', key: 'tel' },
-        { label: 'メールアドレス', key: 'email' },
-        { label: 'お問い合わせ種別', key: 'type[]' },
-        { label: 'お問い合わせ詳細', key: 'message' }
-      ];
-      fields.forEach(function(f) {
-        var val = formData[f.key];
-        if (!val) return;
-        if (Array.isArray(val)) val = val.join(', ');
-        lines.push('【' + f.label + '】\n' + val);
-      });
-      var body = lines.join('\n\n');
-      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      var btn = document.querySelector('.c-form__submit');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '送信中...';
+      }
 
-      // 送信完了画面を表示
-      setTimeout(function() {
-        var main = document.querySelector('.p-contact__main');
-        main.innerHTML =
-          '<div style="text-align:center;padding:120px 40px;">' +
-            '<div style="width:72px;height:72px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">' +
-              '<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:none;stroke:#059669;stroke-width:2.5;"><polyline points="20,6 9,17 4,12"/></svg>' +
-            '</div>' +
-            '<h2 style="font-size:28px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">メールアプリが開きました</h2>' +
-            '<p style="font-size:15px;color:#6b7280;line-height:2;margin-bottom:48px;">' +
-              'メールアプリでお問い合わせ内容をご確認の上、<br>送信ボタンを押してください。' +
-            '</p>' +
-            '<a href="index.html" style="display:inline-block;background:#1a56a8;color:#fff;padding:16px 48px;border-radius:6px;font-weight:700;letter-spacing:0.08em;text-decoration:none;">トップページへ戻る</a>' +
-          '</div>';
-        setStep(2);
-        document.querySelector('.p-contact__count').style.display = 'none';
-      }, 500);
+      var body = {
+        company: formData['company'] || '',
+        department: formData['department'] || '',
+        name: formData['name'] || '',
+        kana: formData['kana'] || '',
+        tel: formData['tel'] || '',
+        email: formData['email'] || '',
+        type: formData['type[]'] || [],
+        message: formData['message'] || ''
+      };
+
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      .then(function(resp) {
+        if (!resp.ok) throw new Error('送信エラー');
+        showComplete();
+      })
+      .catch(function() {
+        showError();
+      });
+    }
+
+    function showComplete() {
+      var main = document.querySelector('.p-contact__main');
+      main.innerHTML =
+        '<div style="text-align:center;padding:120px 40px;">' +
+          '<div style="width:72px;height:72px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">' +
+            '<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:none;stroke:#059669;stroke-width:2.5;"><polyline points="20,6 9,17 4,12"/></svg>' +
+          '</div>' +
+          '<h2 style="font-size:28px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">送信が完了しました</h2>' +
+          '<p style="font-size:15px;color:#6b7280;line-height:2;margin-bottom:48px;">' +
+            'お問い合わせいただきありがとうございます。<br>' +
+            '確認メールをお送りしましたのでご確認ください。<br>' +
+            '担当者より改めてご連絡させていただきます。' +
+          '</p>' +
+          '<a href="index.html" style="display:inline-block;background:#1a56a8;color:#fff;padding:16px 48px;border-radius:6px;font-weight:700;letter-spacing:0.08em;text-decoration:none;">トップページへ戻る</a>' +
+        '</div>';
+      setStep(2);
+      document.querySelector('.p-contact__count').style.display = 'none';
+    }
+
+    function showError() {
+      var main = document.querySelector('.p-contact__main');
+      main.innerHTML =
+        '<div style="text-align:center;padding:120px 40px;">' +
+          '<div style="width:72px;height:72px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">' +
+            '<svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:none;stroke:#dc2626;stroke-width:2.5;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+          '</div>' +
+          '<h2 style="font-size:28px;font-weight:700;color:#1a1a2e;margin-bottom:16px;">送信に失敗しました</h2>' +
+          '<p style="font-size:15px;color:#6b7280;line-height:2;margin-bottom:48px;">' +
+            '申し訳ございません。送信中にエラーが発生しました。<br>' +
+            'お手数ですが、お電話（099-248-9744）にて<br>お問い合わせください。' +
+          '</p>' +
+          '<div style="display:flex;flex-direction:column;align-items:center;gap:12px;">' +
+            '<button onclick="backToForm()" style="background:#1a56a8;color:#fff;padding:16px 48px;border:none;border-radius:6px;font-size:15px;font-weight:700;letter-spacing:0.08em;cursor:pointer;">戻って再試行する</button>' +
+            '<a href="index.html" style="color:#6b7280;font-size:14px;">トップページへ戻る</a>' +
+          '</div>' +
+        '</div>';
+      setStep(2);
     }
   </script>
 

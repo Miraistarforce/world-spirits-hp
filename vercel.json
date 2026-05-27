@@ -8,6 +8,9 @@
     },
     "api/content.js": {
       "maxDuration": 10
+    },
+    "api/contact.js": {
+      "maxDuration": 10
     }
   }
 }
